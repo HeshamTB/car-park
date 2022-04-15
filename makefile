@@ -13,6 +13,15 @@ Queue.o: Queue.c Queue.h
 CPSimulator.o: CPSimulator.c
 	$(CC) $(CFLAGS) CPSimulator.c
 
+monitor.o: monitor.c
+	$(CC) $(CFLAGS) monitor.c
+
+in-valet.o: in-valet.c
+	$(CC) $(CFLAGS) in-valet.c
+
+out-valet.o: out-valet.c
+	$(CC) $(CFLAGS) out-valet.c
+
 clean:
-	rm cp Queue.o CPSimulator.o
+	rm cp Queue.o CPSimulator.o monitor.o in-valet.o out-valet.o
 
