@@ -153,6 +153,7 @@ static void t_itirator_one(void)
     CU_ASSERT_PTR_EQUAL(itirator[0], &car1);
     Qfree();
 }
+
 CU_pSuite t_init_queue_tests(void)
 {
     CU_pSuite suite;
