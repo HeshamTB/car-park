@@ -93,13 +93,19 @@ Car* Qpeek()
  * Return a list of the queue contents and its size.
  * ===========================================================================
  */
-Car** Qiterator(int *sz);
+Car** Qiterator(int *sz)
+{
+    return NULL;
+}
 
 /* ===========================================================================
  * Return the capacity of the FIFO Queue.
  * ===========================================================================
  */
-int Qcapacity();
+int Qcapacity()
+{
+    return queue.capacity;
+}
 
 /* ===========================================================================
  * Return the number of cars in the FIFO Queue.

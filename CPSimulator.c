@@ -9,5 +9,5 @@ int oc, nm, psize;
 long nc, pk, rf, sqw, spt;
 
 int main() {
-    
+    printf("Car Park Simulator\n");
 }
