@@ -93,17 +93,14 @@ static void t_serve_correct_order(void)
     INIT_CAR(4);
     Qenqueue(&car1);
     Qenqueue(&car2);
-    CU_ASSERT_PTR_EQUAL(Qpeek(), &car2);
+    CU_ASSERT_PTR_EQUAL(Qpeek(), &car1);
     Qenqueue(&car3);
-    CU_ASSERT_PTR_EQUAL(Qpeek(), &car3);
+    CU_ASSERT_PTR_EQUAL(Qpeek(), &car1);
     CU_ASSERT_EQUAL(Qsize(), 3);
+    
     Car *car_served = Qserve();
     CU_ASSERT_EQUAL(Qsize(), 2);
-    CU_ASSERT_PTR_EQUAL(car_served, &car3);
-    int diff = strcmp(car_served->pn, "Car number 3");
-    if (diff) {
-            
-    }
+    CU_ASSERT_PTR_EQUAL(car_served, &car1);
 
     car_served = Qserve();
     CU_ASSERT_EQUAL(Qsize(), 1);
@@ -111,7 +108,7 @@ static void t_serve_correct_order(void)
 
     car_served = Qserve();
     CU_ASSERT_EQUAL(Qsize(), 0);
-    CU_ASSERT_PTR_EQUAL(car_served, &car1);
+    CU_ASSERT_PTR_EQUAL(car_served, &car3);
     Qfree();
 }
 // TODO: test for enqueue and serve in correct order..

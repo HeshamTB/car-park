@@ -61,10 +61,8 @@ void Qenqueue(Car *car)
         return;
     }
     int ix_new_head = (queue.head + queue.count) % queue.capacity;
-    queue.count++;
     queue.list[ix_new_head] = car;
-    queue.head = ix_new_head;
-    //queue.count++;
+    queue.count++;
 }
 
 /* ===========================================================================
