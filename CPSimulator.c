@@ -36,6 +36,14 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     double exp_cars = EXP_CARS;
 
     /* Process arguments */
+    process_args(argv, argc, &in_valets, &out_valets, &qsize, &exp_cars);
+    printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
+    /* if some of the optional args are not set to a non-zero, init with default */
+    return 0;
+}
+
+static void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
+{
     /* Redundant code, we can replace with macro or inline function */
     for (int i = 0; i < argc; i++) {
         if (i == 1) {
@@ -46,34 +54,30 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
         } else if (i == 2) {
             int in_valets_in = atoi(argv[i]);
-            if (in_valets_in > VALET_LIMIT) in_valets = VALET_LIMIT;
-            else if (in_valets_in < 1)      in_valets = 1;
-            else                            in_valets = in_valets_in;
+            if (in_valets_in > VALET_LIMIT) *in_val = VALET_LIMIT;
+            else if (in_valets_in < 1)      *in_val = 1;
+            else                            *in_val = in_valets_in;
 
         } else if (i == 3) {
             int out_valets_in = atoi(argv[i]);
-            if (out_valets_in > VALET_LIMIT) out_valets = VALET_LIMIT;
-            else if (out_valets_in < 1)      out_valets = 1; 
-            else                             out_valets = out_valets_in;
+            if (out_valets_in > VALET_LIMIT) *out_val = VALET_LIMIT;
+            else if (out_valets_in < 1)      *out_val = 1; 
+            else                             *out_val = out_valets_in;
 
         } else if (i == 4) {
             int qsize_in = atoi(argv[i]);
-            if (qsize_in > QUEUE_LIMIT) qsize = QUEUE_LIMIT;
-            else if (qsize_in < 3)      qsize = 3;
-            else                        qsize = qsize_in;
+            if (qsize_in > QUEUE_LIMIT) *qsize = QUEUE_LIMIT;
+            else if (qsize_in < 3)      *qsize = 3;
+            else                        *qsize = qsize_in;
 
         } else if (i == 5) {
             double exp_car_in = atof(argv[i]);
-            if (exp_car_in > 1.5)       exp_cars = 0.05;
-            else if (exp_car_in < 0.01) exp_cars = 0.01;
-            else                        exp_cars = exp_car_in;
+            if (exp_car_in > 1.5)       *exp_cars = 0.05;
+            else if (exp_car_in < 0.01) *exp_cars = 0.01;
+            else                        *exp_cars = exp_car_in;
         }
     }
-    printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
-    /* if some of the optional args are not set to a non-zero, init with default */
-    return 0;
 }
-
 /**
     Print help in case of incorrect usage
     @author Hesham T. Banafa
@@ -83,3 +87,4 @@ void usage()
 {
     fprintf(stderr, "usage: carpark [psize inval outval qsize expnum]");
 }
+
