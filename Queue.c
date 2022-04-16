@@ -22,7 +22,7 @@ void Qinit(int n)
     queue.tail = 0;
     queue.head = 0;
     queue.count = 0;
-    queue.list = malloc(sizeof(Car)*queue.capacity); // Returns a ptr to array of car ptrs
+    queue.data = malloc(sizeof(Car)*queue.capacity); // Returns a ptr to array of car ptrs
 }
 
 /* =============================================================================
@@ -32,7 +32,7 @@ void Qinit(int n)
 void Qfree()
 {
     // The only runtime allocated memory are the list and data fields.
-    free(queue.list);
+    free(queue.data);
     //free(queue.data);
 }
 
@@ -43,9 +43,9 @@ void Qfree()
 void Qclear()
 {
     for (int i = 0; i < queue.capacity; i++) {
-        queue.list[i] = NULL; 
+        queue.data[i] = NULL; 
     }
-    free(queue.list);
+    free(queue.data);
     Qinit(queue.capacity); // Should reset all 
 }
 
@@ -74,8 +74,8 @@ void Qenqueue(Car *car)
 Car* Qserve()
 {
     if (QisEmpty()) return NULL;
-    Car *result = queue.list[queue.head]; // Temp save ptr. init outside.
-    queue.list[queue.head] = NULL; // Clear slot
+    Car *result = queue.data[queue.head]; // Temp save ptr. init outside.
+    queue.data[queue.head] = NULL; // Clear slot
     queue.head = (queue.head + 1) % queue.capacity; // New head
     queue.count--;
     return result;
@@ -87,7 +87,7 @@ Car* Qserve()
  */
 Car* Qpeek()
 {
-    return queue.list[queue.head];
+    return queue.data[queue.head];
 }
 
 /* ===========================================================================

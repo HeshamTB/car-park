@@ -131,6 +131,7 @@ static void t_overfill(void)
     Qenqueue(&car5);
     CU_ASSERT_TRUE(QisFull());
     CU_ASSERT_EQUAL(Qsize(), 4);
+    CU_ASSERT_PTR_EQUAL(Qpeek(), &car1);
     Qfree();
 }
 
