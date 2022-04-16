@@ -135,6 +135,24 @@ static void t_overfill(void)
     Qfree();
 }
 
+static void t_itirator_one(void)
+{
+    Qinit(5);
+    Car car1 = {
+        .atm = time(NULL),
+        .cid = 5,
+        .pnf = "Test car itirator"
+    };
+    Qenqueue(&car1);
+    CU_ASSERT_EQUAL(Qsize(), 1);
+    CU_ASSERT_FALSE(QisFull());
+    CU_ASSERT_FALSE(QisEmpty());
+    int size;
+    Car **itirator = Qiterator(&size);
+    CU_ASSERT_EQUAL(size, 1);
+    CU_ASSERT_PTR_EQUAL(itirator[0], &car1);
+    Qfree();
+}
 CU_pSuite t_init_queue_tests(void)
 {
     CU_pSuite suite;
@@ -160,6 +178,7 @@ CU_pSuite t_init_queue_tests(void)
     QUEUE_TEST(suite, t_enqueue_to_full);
     QUEUE_TEST(suite, t_serve_correct_order);
     QUEUE_TEST(suite, t_overfill);
+    QUEUE_TEST(suite, t_itirator_one);
     
     return suite;
 }

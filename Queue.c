@@ -97,7 +97,25 @@ Car* Qpeek()
  */
 Car** Qiterator(int *sz)
 {
-    return NULL;
+    /* 
+        Send back a bubble-less array with it's size
+        i.e. safe to itirate over.
+        We allocate memory here and hope it is freed...
+        Preconition QisEmpty = False
+    */
+    *sz = queue.count;
+    if (QisEmpty()) return NULL; // Returns sz 0 too
+    /* An easy solution is to simulate a serve */
+    int count = queue.count;
+    int head  = queue.head;
+    int list_counter = 0;    
+    Car **list = malloc(sizeof(Car)*count);
+    while (count != 0) {
+        list[list_counter] = queue.data[head]; // Save head
+        head = (head + 1) % queue.capacity;    // New head
+        count--; list_counter++;
+    }
+    return list;
 }
 
 /* ===========================================================================
