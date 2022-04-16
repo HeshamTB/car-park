@@ -42,6 +42,11 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     return 0;
 }
 
+/**
+    Read in args from argv
+    @author Hesham T. Banafa
+    @date Apr 17th, 2022
+*/
 static void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
 {
     /* Redundant code, we can replace with macro or inline function */
@@ -78,6 +83,7 @@ static void process_args(char *argv[], int argc, int *in_val, int *out_val, int 
         }
     }
 }
+
 /**
     Print help in case of incorrect usage
     @author Hesham T. Banafa
