@@ -80,13 +80,6 @@ static void t_serve_correct_order(void)
     Qinit(4);
     Car car1, car2, car3, car4;
 
-#define INIT_CAR(car_num)      \
-    car##car_num = (Car) {     \
-        .atm = time(NULL),     \
-        .cid = 4,              \
-    };                         \
-    sprintf(car##car_num.pn, "Car number %d", car_num);
-
     INIT_CAR(1);
     INIT_CAR(2);
     INIT_CAR(3);
@@ -185,12 +178,7 @@ CU_pSuite t_init_queue_tests(void)
         return NULL;
     }
 
-    // Do tests
-#define QUEUE_TEST(s,t)                                        \
-    if (!CU_ADD_TEST(s,t)) {                                   \
-        fprintf(stderr, "W: cannot add array queue test (%s)", \
-        CU_get_error_msg()); \
-    }                       
+    // Do tests                    
 
     QUEUE_TEST(suite, t_empty_queue);
     QUEUE_TEST(suite, t_enqueue_one_then_check_size);
