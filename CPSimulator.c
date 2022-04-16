@@ -47,7 +47,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     @author Hesham T. Banafa
     @date Apr 17th, 2022
 */
-static void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
+static inline void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
 {
     /* Redundant code, we can replace with macro or inline function */
     for (int i = 0; i < argc; i++) {
