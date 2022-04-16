@@ -31,7 +31,9 @@ void Qinit(int n)
  */
 void Qfree()
 {
-
+    // The only runtime allocated memory are the list and data fields.
+    free(queue.list);
+    //free(queue.data);
 }
 
 /* =============================================================================
@@ -43,6 +45,7 @@ void Qclear()
     for (int i = 0; i < queue.capacity; i++) {
         queue.list[i] = NULL; 
     }
+    free(queue.list);
     Qinit(queue.capacity); // Should reset all 
 }
 
