@@ -60,9 +60,10 @@ void Qenqueue(Car *car)
         // Do not add. We cant throw execpt or retun a value...
         return;
     }
-    int ix_new_head = (queue.head + queue.count) % queue.capacity;
-    queue.list[ix_new_head] = car;
+    int ix_new_tail = (queue.head + queue.count) % queue.capacity;
+    queue.data[ix_new_tail] = car;
     queue.count++;
+    queue.tail = ix_new_tail; // Tail is the last one one
 }
 
 /* ===========================================================================
