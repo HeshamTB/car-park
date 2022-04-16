@@ -111,8 +111,29 @@ static void t_serve_correct_order(void)
     CU_ASSERT_PTR_EQUAL(car_served, &car3);
     Qfree();
 }
-// TODO: test for enqueue and serve in correct order..
-// TODO: Abuse test.
+
+static void t_overfill(void)
+{
+    Qinit(4);
+    Car car1, car2, car3, car4, car5;
+    INIT_CAR(1);
+    INIT_CAR(2);
+    INIT_CAR(3);
+    INIT_CAR(4);
+    INIT_CAR(5);
+    CU_ASSERT_TRUE(QisEmpty());
+    Qenqueue(&car1);
+    Qenqueue(&car2);
+    Qenqueue(&car3);
+    CU_ASSERT_FALSE(QisFull());
+    Qenqueue(&car4);
+    CU_ASSERT_TRUE(QisFull());
+    Qenqueue(&car5);
+    CU_ASSERT_TRUE(QisFull());
+    CU_ASSERT_EQUAL(Qsize(), 4);
+    Qfree();
+}
+
 CU_pSuite t_init_queue_tests(void)
 {
     CU_pSuite suite;
@@ -137,6 +158,7 @@ CU_pSuite t_init_queue_tests(void)
     QUEUE_TEST(suite, t_enqueue_then_serve);
     QUEUE_TEST(suite, t_enqueue_to_full);
     QUEUE_TEST(suite, t_serve_correct_order);
+    QUEUE_TEST(suite, t_overfill);
     
     return suite;
 }
