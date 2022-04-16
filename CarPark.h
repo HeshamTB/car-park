@@ -17,10 +17,10 @@
  * definitons required by the graphical dispay.
  * =============================================================================
  */ 
-#define IN_VALETS    5				// Default number of in valets
+#define IN_VALETS    3				// Default number of in valets
 #define OUT_VALETS   2				// Default number of out valets
 #define VALET_LIMIT  6				// Limit the number of in or out valets
-#define QUEUE_SIZE   5				// Default size of the waiting cars queue
+#define QUEUE_SIZE   8				// Default size of the waiting cars queue
 #define QUEUE_LIMIT  8				// Limit the number of car waiting list
 #define PARK_SIZE   16				// Default capacity of the parking space (minimum)
 #define PARK_LIMIT  40				// Maximum capacity of the parking space (maximum)
