@@ -11,6 +11,7 @@
     TODO: correctly set value of tail
 */
 static Queue queue;
+static int first = 1;
 
 /* =============================================================================
  * Initialize the feilds of a Queue structure instance.
@@ -34,6 +35,7 @@ void Qfree()
     // The only runtime allocated memory are the list and data fields.
     free(queue.data);
     free(queue.list);
+    first = 1;
 }
 
 /* =============================================================================
@@ -109,7 +111,12 @@ Car** Qiterator(int *sz)
     int count = queue.count;
     int head  = queue.head;
     int list_counter = 0;
-    free(queue.list);    
+    if (first) {
+        // Dont free
+        first = 0;
+    } else {
+        free(queue.list);
+    }    
     queue.list = malloc(sizeof(Car)*count);
     while (count != 0) {
         queue.list[list_counter] = queue.data[head]; // Save head

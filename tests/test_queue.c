@@ -154,6 +154,25 @@ static void t_itirator_one(void)
     Qfree();
 }
 
+static void t_itirator_n(void)
+{
+    Qinit(5);
+    Car car1, car2, car3;
+    INIT_CAR(1);
+    INIT_CAR(2);
+    INIT_CAR(3);
+    Qenqueue(&car1);
+    Qenqueue(&car2);
+    Qenqueue(&car3);
+    int size = 0;
+    Car **list = Qiterator(&size);
+    CU_ASSERT_EQUAL(size, 3);
+    CU_ASSERT_PTR_EQUAL(list[0], &car1);
+    CU_ASSERT_PTR_EQUAL(list[1], &car2);
+    CU_ASSERT_PTR_EQUAL(list[2], &car3);
+    Qfree();
+}
+
 CU_pSuite t_init_queue_tests(void)
 {
     CU_pSuite suite;
@@ -180,6 +199,7 @@ CU_pSuite t_init_queue_tests(void)
     QUEUE_TEST(suite, t_serve_correct_order);
     QUEUE_TEST(suite, t_overfill);
     QUEUE_TEST(suite, t_itirator_one);
+    QUEUE_TEST(suite, t_itirator_n);
     
     return suite;
 }
