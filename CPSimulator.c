@@ -17,7 +17,19 @@ sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, parked, spt_mutex;
 
 pthread_t monitor;
 
-void init_semaphores(){    
+
+
+/**
+    intializes the semaphores, the car park array, the car queue and the GUI
+    @author Muhannad Al-Ghamdi
+    @date Apr 18th, 2022
+*/
+void init(){
+    //init the car Queue
+    Qinit(qsize);
+
+    
+    //init semaphores
     sem_init(&arrivals, 0, qsize);
     sem_init(&sqw_mutex, 0, 1);
     sem_init(&in_held_mutex, 0, 1);
@@ -25,16 +37,13 @@ void init_semaphores(){
     sem_init(&writer, 0, 1);
     sem_init(&parked, 0, 0);
     sem_init(&spt_mutex, 0, 1);
-}
-
-
-void init_carpark(){
+    
+    //init car park array
     car_parks = calloc(psize,sizeof(Car));
+    
+    //init the GUI
     G2DInit(&car_parks, psize, in_valets, out_valets, mutex);
-
 }
-
-
 
 
 
@@ -70,10 +79,12 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     /* if some of the optional args are not set to a non-zero, init with default */
     
     
-    init_semaphores();
-    init_carpark();
+    init();
     
+    
+    //testing the GUI (monitor thread)
     pthread_create(&monitor, NULL, run_monitor, NULL);    
+    pthread_join(monitor,NULL);
     
     return 0;
 }

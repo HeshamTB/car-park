@@ -61,9 +61,9 @@ void *run_monitor(void *args){
     *ut_previous = 0;
     
     while(true){
-        calc_utilization(ut_previous,ut);
+//        calc_utilization(ut_previous,ut);
         show();
         sleep(1); // sleeps for 1s required in CarPark to complete drawing
-        print_stats();
+//        print_stats();
     }
 }
