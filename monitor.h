@@ -6,7 +6,7 @@
     @returns void
     @author Muhannad Al-Ghamdi
 */
-void *run_monitor(void *args);
+void *run_monitor (void *args);
 
 /** 
     Calculate car-park cumulative utilization

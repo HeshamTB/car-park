@@ -1,9 +1,11 @@
+#include <stdio.h>
+#include <unistd.h>
 #include "CPSimulator.h"
 #include "CarPark.h"
-#include "CPsimulator.h"
+#include "CPSimulator.h"
 
 
-
+double *ut, *ut_previous;
 /** 
     Calculate car-park cumulative utilization
     @param  double ptr  varible of pervious calculation
@@ -31,7 +33,7 @@ inline void calc_utilization(double *ut_previous, double *ut)
 */
 void print_stats()
 {
-    printf("------------------------------[stats]-----------------------------------");
+    printf("------------------------------[stats]-----------------------------------\n");
     printf("number of ocupied slots = %d\n",oc);
     printf("total number of created cars = %d\n",nc);
     printf("total number of allowed to park cars = %d\n",pk);
@@ -40,7 +42,7 @@ void print_stats()
     printf("Accumulation sum of car-waiting times in the queue = %d\n",sqw);
     printf("Accumulation sum of car-parking durations = %d\n",spt);
     printf("The car-park space utilization = %d\n",ut);
-    printf("------------------------------------------------------------------------");
+    printf("------------------------------------------------------------------------\n");
 
 }
 
@@ -55,8 +57,8 @@ void print_stats()
     @author Muhannad Al-Ghamdi
 */
 void *run_monitor(void *args){
-    double *ut = 0;
-    double *ut_previous = 0;
+    *ut = 0;
+    *ut_previous = 0;
     
     while(true){
         calc_utilization(ut_previous,ut);

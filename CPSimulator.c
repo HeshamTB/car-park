@@ -1,13 +1,42 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <semaphore.h>
 #include "CPSimulator.h"
 #include "CarPark.h"
 #include "in-valet.h"
+#include "monitor.h"
 
 
-int oc, nm, psize;
+int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
+Car* car_parks = NULL;
+
+pthread_mutex_t mutex;
+sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, parked, spt_mutex;
+
+pthread_t monitor;
+
+void init_semaphores(){    
+    sem_init(&arrivals, 0, qsize);
+    sem_init(&sqw_mutex, 0, 1);
+    sem_init(&in_held_mutex, 0, 1);
+    sem_init(&empty, 0, psize);
+    sem_init(&writer, 0, 1);
+    sem_init(&parked, 0, 0);
+    sem_init(&spt_mutex, 0, 1);
+}
+
+
+void init_carpark(){
+    car_parks = calloc(psize,sizeof(Car));
+    G2DInit(&car_parks, psize, in_valets, out_valets, mutex);
+
+}
+
+
+
+
 
 /**
     Entry point of program
@@ -30,17 +59,37 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     sqw = 0;
     spt = 0;
 
-    int in_valets = IN_VALETS;
-    int out_valets = OUT_VALETS;
-    int qsize = QUEUE_SIZE;
+    in_valets = IN_VALETS;
+    out_valets = OUT_VALETS;
+    qsize = QUEUE_SIZE;
     double exp_cars = EXP_CARS;
 
     /* Process arguments */
     process_args(argv, argc, &in_valets, &out_valets, &qsize, &exp_cars);
     printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
     /* if some of the optional args are not set to a non-zero, init with default */
+    
+    
+    init_semaphores();
+    init_carpark();
+    
+    pthread_create(&monitor, NULL, run_monitor, NULL);    
+    
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
     Read in args from argv
