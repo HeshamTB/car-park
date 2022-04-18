@@ -2,7 +2,8 @@
 
 extern int oc, nm, psize;
 extern long nc, pk, rf, sqw, spt;
-
+extern sem_t sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, parked, spt_mutex;
+extern Car* car_parks;
 
 /**
     Print help in case of incorrect usage
