@@ -6,6 +6,17 @@
 #include <semaphore.h>
 #include <Queue.h>
 
+
+
+
+
+/**
+    Initialize in-valet thread-pool
+    @param Number of valets to start
+    @returns 0 if successful, 1 if failed
+    @author Muhannad Al-Ghamdi 
+    @date 18/04/2022
+*/
 int init_in_valets(int number_valets) 
 {
     pthread_t tid[number_valets];
@@ -24,6 +35,15 @@ int init_in_valets(int number_valets)
 
 
 
+
+
+/**
+    Entry point for in-valet thread
+    @param Pointer to thread arguments array
+    @returns void
+    @author Muhannad Al-Ghamdi
+    @date 18/04/2022
+*/
 void *run_in_valet(void *args){
     Car*  newCar;
     time_t delta;
