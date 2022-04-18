@@ -80,11 +80,16 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     
     
     init();
-    
+
+    sleep(3);
+    while (true){
+        show();
+        sleep(1);
+    }
     
     //testing the GUI (monitor thread)
-    pthread_create(&monitor, NULL, run_monitor, NULL);    
-    pthread_join(monitor,NULL);
+//    pthread_create(&monitor, NULL, run_monitor, NULL);    
+//    pthread_join(monitor,NULL);
     
     return 0;
 }
