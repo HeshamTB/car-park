@@ -2,11 +2,22 @@
 #include "CPSimulator.h"
 #include "CPSimulator.h"
 #include <pthread.h>
+#include <pthread.h>
 #include <semaphore.h>
 #include <Queue.h>
 
 int init_in_valets(int number_valets) 
 {
+    pthread_t tid[number_valets];
+    
+    for (int i=0; i<number_valets, i++){
+        pthread_create(&tid[i],NULL,run_in_valets,NULL);
+    }
+    
+    for (int i=0; i<number_valets, i++){
+         pthread_join(tid[i],NULL);
+    }
+    
     
     return 0;
 }
