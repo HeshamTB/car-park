@@ -1,21 +1,27 @@
+#include <alloca.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
+#include <sys/cdefs.h>
+#include <unistd.h>
+
+#ifndef CARPARK_H
 #include "CarPark.h"
+#endif
+#include "CPSimulator.h"
 #include "in-valet.h"
 #include "monitor.h"
-#include "string.h"
+#include <string.h>
 
 int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
 Car* car_parks = NULL;
 
 pthread_mutex_t mutex;
-sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, parked, spt_mutex;
+sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, lock_parked, spt_mutex;
 
 pthread_t monitor;
-
 
 
 /**
@@ -34,7 +40,7 @@ void init(){
     sem_init(&in_held_mutex, 0, 1);
     sem_init(&empty, 0, psize);
     sem_init(&writer, 0, 1);
-    sem_init(&parked, 0, 0);
+    sem_init(&lock_parked, 0, 0);
     sem_init(&spt_mutex, 0, 1);
     
     //init car park array
@@ -112,24 +118,12 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
     Read in args from argv
     @author Hesham T. Banafa
     @date Apr 17th, 2022
 */
-inline void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
+void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
 {
     /* Redundant code, we can replace with macro or inline function */
     for (int i = 0; i < argc; i++) {
@@ -165,6 +159,8 @@ inline void process_args(char *argv[], int argc, int *in_val, int *out_val, int 
         }
     }
 }
+
+
 
 /**
     Print help in case of incorrect usage

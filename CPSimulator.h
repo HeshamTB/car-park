@@ -1,7 +1,16 @@
+#ifndef CPSIM_H
+#define CPSIM_H
+
+
+#include <semaphore.h>
+
+#ifndef CAR_H
+#include "Car.h"
+#endif
 
 extern int oc, nm, psize;
 extern long nc, pk, rf, sqw, spt;
-extern sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, parked, spt_mutex;
+extern sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, lock_parked, spt_mutex;
 extern Car* car_parks;
 
 /**
@@ -16,4 +25,6 @@ void usage();
     @author Hesham T. Banafa
     @date Apr 17th, 2022
 */
-static void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars);
+void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars);
+
+#endif

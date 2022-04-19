@@ -1,3 +1,7 @@
+#ifndef CAR_H
+#define CAR_H
+
+
 /*
  * Car.h
  *
@@ -49,3 +53,4 @@ typedef struct Car_t {
  */
 void CarInit(Car *car);
 
+#endif

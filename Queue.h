@@ -1,3 +1,7 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
+
 /*
  * Queue.h
  *
@@ -117,3 +121,4 @@ bool QisFull();
  */
 bool QisEmpty();
 
+#endif
