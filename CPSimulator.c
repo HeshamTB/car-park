@@ -43,6 +43,8 @@ void init(){
     sem_init(&lock_parked, 0, 0);
     sem_init(&spt_mutex, 0, 1);
     
+    //init the mutex for car park
+    pthread_mutex_init(&mutex,NULL);    
     //init car park array
     car_parks = calloc(psize,sizeof(Car));
     
