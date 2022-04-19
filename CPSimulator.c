@@ -90,27 +90,28 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
     //[TEST]: test the GUI   
     init();
-    Car car;
     int ReqCarNum;
     while (true){
         show();
         sleep(1);
         ReqCarNum = newCars(1);
-        if(QisFull()){
-            rf++;
-        }else{
-            pk++;
-            sem_wait(&mutex);
-            //initalize a car for testing
-            CarInit(&car);
-            //add it to the queue
-            Qenqueue(&car);
-            sem_post(&mutex);
-        }
+        Car newCars[ReqCarNum];
+        
+        for (int i=0; i<ReqCarNum;i++){
+            if (QisFull()){
+                rf++;
+            }else{
+                pk++;
+                CarInit(&newCars[i]);
+                sem_wait(&mutex);
+                Qenqueue(&newCars[i]);
+                sem_post(&mutex);
+                }
+            }
+    }
         
        
-    }
-    
+        
     
     
     //[Test]: testing the GUI (monitor thread)

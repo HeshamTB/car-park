@@ -28,8 +28,9 @@ void CarInit(Car *car)
 }
 
 void get_rand_images(char *pn, char *pnf)
-{
+{   
     int car_num = rand() % 12 + 1;
     sprintf(pn, IMG_FILE_BASE, car_num);
     sprintf(pnf, IMG_FILE_BASE_F, car_num); // Risky if car_num make totoal string exeed 20 chars
+
 }
