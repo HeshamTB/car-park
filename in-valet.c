@@ -30,11 +30,11 @@ void *run_in_valet(void *args){
         
     /*get the car from the queue*/    
     sem_wait(&arrivals); /*wait for arrivals*/   
-    pthread_mutex_lock(&mutex);
+    sem_wait(&mutex);
     setViState(id, FETCH);	// Set the state of in-valet 
     newCar = Qserve();
     setViCar(id, newCar);	// Set the car acquired by the in-valet   
-    pthread_mutex_unlock(&mutex);
+    sem_post(&mutex);
    /*release the queue lock*/
     
 
@@ -55,7 +55,7 @@ void *run_in_valet(void *args){
     setViState(id, WAIT);	// Set the state of in-valet 
     /*park/serve the acquired car*/
     sem_wait(&empty); /*wait for empty slot in the parking area*/
-    sem_wait(&writer); /*acquire the parking array lock*/
+    pthread_mutex_lock(&writer); /*acquire the parking array lock*/
     oc++;
     //find NULL locations in the parking array
     for (int i=0; i<psize; i++){
@@ -67,7 +67,7 @@ void *run_in_valet(void *args){
         }
     }
     sem_post(&lock_parked); /*signal a new parked car*/
-    sem_post(&writer); /*release the parking array lock*/
+    pthread_mutex_lock(&writer); /*release the parking array lock*/
     
     
     

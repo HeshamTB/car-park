@@ -17,8 +17,8 @@ int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
 Car** car_parks = NULL;
 
-pthread_mutex_t mutex;
-sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, lock_parked, spt_mutex;
+pthread_mutex_t writer;
+sem_t mutex, arrivals, sqw_mutex, in_held_mutex, empty, lock_parked, spt_mutex;
 
 pthread_t monitor;
 
@@ -38,17 +38,17 @@ void init(){
     sem_init(&sqw_mutex, 0, 1);
     sem_init(&in_held_mutex, 0, 1);
     sem_init(&empty, 0, psize);
-    sem_init(&writer, 0, 1);
+    sem_init(&mutex, 0, 1);
     sem_init(&lock_parked, 0, 0);
     sem_init(&spt_mutex, 0, 1);
     
     //init the mutex for car park
-    pthread_mutex_init(&mutex,NULL);    
+    pthread_mutex_init(&writer,NULL);    
     //init car park array
     car_parks = calloc(psize,sizeof(Car));
     
     //init the GUI
-    G2DInit(car_parks, psize, in_valets, out_valets, mutex);
+    G2DInit(car_parks, psize, in_valets, out_valets, writer);
 
 }
 
@@ -90,17 +90,25 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
     //[TEST]: test the GUI   
     init();
-    newCars(1);
-    //initalize a car for testing
-    Car car1;
-    CarInit(&car1);
-
-    //add it to the queue
-    Qenqueue(&car1);
-    sleep(3);
+    Car car;
+    int ReqCarNum;
     while (true){
         show();
         sleep(1);
+        ReqCarNum = newCars(1);
+        if(QisFull()){
+            rf++;
+        }else{
+            pk++;
+            sem_wait(&mutex);
+            //initalize a car for testing
+            CarInit(&car);
+            //add it to the queue
+            Qenqueue(&car);
+            sem_post(&mutex);
+        }
+        
+       
     }
     
     
