@@ -16,7 +16,7 @@
 
 int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
-Car* car_parks = NULL;
+Car** car_parks = NULL;
 
 pthread_mutex_t mutex;
 sem_t arrivals, sqw_mutex, in_held_mutex, empty, writer, lock_parked, spt_mutex;
@@ -47,7 +47,8 @@ void init(){
     car_parks = calloc(psize,sizeof(Car));
     
     //init the GUI
-    G2DInit(&car_parks, psize, in_valets, out_valets, mutex);
+    G2DInit(car_parks, psize, in_valets, out_valets, mutex);
+
 }
 
 
