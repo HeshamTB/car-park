@@ -22,7 +22,7 @@ int init_in_valets(int number_valets)
     pthread_t tid[number_valets];
     
     for (int i=0; i<number_valets, i++){
-        pthread_create(&tid[i],NULL,run_in_valets,NULL);
+        pthread_create(&tid[i],NULL,run_in_valets,(void *)(int64_t)i);
     }
     
     for (int i=0; i<number_valets, i++){
@@ -47,17 +47,20 @@ int init_in_valets(int number_valets)
 void *run_in_valet(void *args){
     Car*  newCar;
     time_t delta;
- 
+    int id;
+    id = (int64_t)args;
     while (true){
         
         
     /*get the car from the queue*/    
     sem_wait(&arrivals); /*wait for arrivals*/   
     sem_wait(&mutex);    /*acquire the queue lock*/ 
-    newCar = Qserve();   
+    setViState(id, FETCH);	// Set the state of in-valet 
+    newCar = Qserve();
+    setViCar(id, newCar);	// Set the car acquired by the in-valet   
     sem_post(&mutex);   /*release the queue lock*/
     
-    
+
     /*record the car wating time in the queue*/
     delta = time(NULL) - newCar.atm;
     sem_wait(&sqw_mutex); /*acquire the lock for Accumulation sum of car-waiting times in the queue*/
@@ -72,7 +75,7 @@ void *run_in_valet(void *args){
     
     
     
-    
+    setViState(id, WAIT);	// Set the state of in-valet 
     /*park/serve the acquired car*/
     sem_wait(&empty); /*wait for empty slot in the parking area*/
     sem_wait(&writer); /*acquire the parking array lock*/
@@ -80,6 +83,7 @@ void *run_in_valet(void *args){
     //find NULL locations in the parking array
     for (int i=0; i<psize; i++){
         if (car_parks[i] == NULL){
+            setViState(id, MOVE);	// Set the state of in-valet 
             // replace it with the new car
             car_parks[i] = newCar;
             break;
@@ -95,6 +99,7 @@ void *run_in_valet(void *args){
     sem_wait(&in_held_mutex); /*acquire the queue lock*/
     nm--;
     sem_post(&in_held_mutex); /*release the nm lock*/
+    setViState(id, READY);	// Set the state of in-valet 
     
-    
+}
 }
