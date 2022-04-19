@@ -4,7 +4,7 @@ LIBS= -lSDL_bgi -l SDL2 -pthread -lm
 
 all: cp
 
-cp: CarPark.o Queue.o CPSimulator.o monitor.o Car.h Queue.h CarPark.h 
+cp: CarPark.o Queue.o CPSimulator.o monitor.o in-valet.o Car.h Queue.h CarPark.h 
 	$(CC) CarPark.o Queue.o CPSimulator.o monitor.o -o cp $(LIBS)
 
 Queue.o: Queue.c Queue.h
