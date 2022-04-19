@@ -10,8 +10,8 @@ cp: CarPark.o Queue.o CPSimulator.o monitor.o Car.h Queue.h CarPark.h
 Queue.o: Queue.c Queue.h
 	$(CC) $(CFLAGS) Queue.c
 
-CPSimulator.o: CPSimulator.c
-	$(CC) $(CFLAGS) CPSimulator.c
+CPSimulator.o: CPSimulator.c 
+	$(CC) $(CFLAGS) CPSimulator.c 
 
 monitor.o: monitor.c
 	$(CC) $(CFLAGS) monitor.c

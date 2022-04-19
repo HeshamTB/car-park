@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "CPSimulator.h"
+#include <semaphore.h>
 #include "Queue.h"
 
 /**
@@ -99,31 +99,31 @@ Car* Qpeek()
  */
 Car** Qiterator(int *sz)
 {
-//    /* 
-//        Send back a bubble-less array with it's size
-//        i.e. safe to itirate over.
-//        We allocate memory here and hope it is freed...
-//        Preconition QisEmpty = False
-//    */
-//    *sz = queue.count;
-//    if (QisEmpty()) return NULL; // Returns sz 0 too
-//    /* An easy solution is to simulate a serve */
-//    int count = queue.count;
-//    int head  = queue.head;
-//    int list_counter = 0;
-//    if (first) {
-//        // Dont free
-//        first = 0;
-//    } else {
-//        free(queue.list);
-//    }    
-//    queue.list = malloc(sizeof(Car)*count);
-//    while (count != 0) {
-//        queue.list[list_counter] = queue.data[head]; // Save head
-//        head = (head + 1) % queue.capacity;    // New head
-//        count--; list_counter++;
-//    }
-//    return queue.list;
+    /* 
+        Send back a bubble-less array with it's size
+        i.e. safe to itirate over.
+        We allocate memory here and hope it is freed...
+        Preconition QisEmpty = False
+    */
+    *sz = queue.count;
+    if (QisEmpty()) return NULL; // Returns sz 0 too
+    /* An easy solution is to simulate a serve */
+    int count = queue.count;
+    int head  = queue.head;
+    int list_counter = 0;
+    if (first) {
+        // Dont free
+        first = 0;
+    } else {
+        free(queue.list);
+    }    
+    queue.list = malloc(sizeof(Car)*count);
+    while (count != 0) {
+        queue.list[list_counter] = queue.data[head]; // Save head
+        head = (head + 1) % queue.capacity;    // New head
+        count--; list_counter++;
+    }
+    return queue.list;
 }
 
 /* ===========================================================================

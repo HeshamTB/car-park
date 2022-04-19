@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
-#include "CPSimulator.h"
 #include "CarPark.h"
 #include "in-valet.h"
 #include "monitor.h"
-
+#include "string.h"
 
 int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
@@ -77,17 +76,35 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     process_args(argv, argc, &in_valets, &out_valets, &qsize, &exp_cars);
     printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
     /* if some of the optional args are not set to a non-zero, init with default */
-    
-    
-    init();
+ 
 
+
+
+    //[TEST]: test the GUI   
+    init();
+    newCars(1);
+    //initalize a car for testing
+    Car car;
+    car.cid = 1;
+    car.vid = 1;
+    car.sno = 0;
+    char carimg[20]=".cars/Car0.bmp";
+    char carimgf[20]=".cars/Car0f.bmp";
+
+    strncpy(car.pn, carimg, sizeof(car.pn) - 1);
+    strncpy(car.pnf, carimgf, sizeof(car.pnf) - 1);
+
+    //add it to the queue
+    Qenqueue(&car);
     sleep(3);
     while (true){
         show();
         sleep(1);
     }
     
-    //testing the GUI (monitor thread)
+    
+    
+    //[Test]: testing the GUI (monitor thread)
     //pthread_create(&monitor, NULL, run_monitor, NULL);    
     //pthread_join(monitor,NULL);
     
@@ -112,7 +129,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     @author Hesham T. Banafa
     @date Apr 17th, 2022
 */
-static inline void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
+inline void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars)
 {
     /* Redundant code, we can replace with macro or inline function */
     for (int i = 0; i < argc; i++) {
