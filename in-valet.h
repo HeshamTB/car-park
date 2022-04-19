@@ -1,4 +1,5 @@
-
+#ifndef INVALET
+#define INVALET
 #include <pthread.h>
 
 /**
@@ -16,3 +17,5 @@ int init_in_valets(int number_valets);
     @author Muhannad Al-Ghamdi
 */
 void *run_in_valet(void *args);
+
+#endif
