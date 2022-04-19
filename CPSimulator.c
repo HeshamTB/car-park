@@ -5,10 +5,9 @@
 #include <semaphore.h>
 #include <sys/cdefs.h>
 #include <unistd.h>
+#include <time.h>
 
-#ifndef CARPARK_H
 #include "CarPark.h"
-#endif
 #include "CPSimulator.h"
 #include "in-valet.h"
 #include "monitor.h"
@@ -32,7 +31,7 @@ pthread_t monitor;
 void init(){
     //init the car Queue
     Qinit(qsize);
-
+    srand(time(NULL));
     
     //init semaphores
     sem_init(&arrivals, 0, qsize);
@@ -91,18 +90,11 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     init();
     newCars(1);
     //initalize a car for testing
-    Car car;
-    car.cid = 1;
-    car.vid = 1;
-    car.sno = 0;
-    char carimg[20]=".cars/Car0.bmp";
-    char carimgf[20]=".cars/Car0f.bmp";
-
-    strncpy(car.pn, carimg, sizeof(car.pn) - 1);
-    strncpy(car.pnf, carimgf, sizeof(car.pnf) - 1);
+    Car car1;
+    CarInit(&car1);
 
     //add it to the queue
-    Qenqueue(&car);
+    Qenqueue(&car1);
     sleep(3);
     while (true){
         show();

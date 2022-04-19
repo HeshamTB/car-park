@@ -1,6 +1,5 @@
 #ifndef CARPARK_H
 #define CARPARK_H
-#endif
 
 /*
  * CarPark.h
@@ -106,3 +105,4 @@ void finish();
  */
 int newCars (double ex);
 
+#endif

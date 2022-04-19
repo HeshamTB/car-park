@@ -53,4 +53,9 @@ typedef struct Car_t {
  */
 void CarInit(Car *car);
 
+/**
+	Construct image file names and set them 
+*/
+void get_rand_images(char *pn, char *pnf);
+
 #endif
