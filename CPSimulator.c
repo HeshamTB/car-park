@@ -82,7 +82,6 @@ int main(int argc, char *argv[])
 {
     printf("Car Park Simulator\n\
 Muhannad Al-Ghamdi - Hesham T. Banafa\n");
-
     oc = 0;
     nm = 0;
     psize = PARK_SIZE;
@@ -109,12 +108,14 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     init();
     
     while (1) {
-        sleep(1);
+        sleep(0.5);
         int num_newcars = newCars(exp_cars);
         /* allocate each car individually so we can later free per car */
         for (int i = 0; i < num_newcars; i++) {
             Car *new_car = calloc(1, sizeof(Car));
+            
             CarInit(new_car);
+            new_car->cid=nc+1;
             nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
             if (QisFull()) {
@@ -122,7 +123,6 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
                 free(new_car);
                 continue; // Car is turned away TODO: update stats
             }
-            pk++; // TODO move to in-valet done and sync
             /* Aquire queue write lock */
             sem_wait(&mutex);
             Qenqueue(new_car);
@@ -199,6 +199,7 @@ void sigint_handler()
 {
     printf("Recieved SIGINT...\n");
     inturppted = 1;
+    pthread_cancel(monitor);
     finish();
     exit(0);
 }
@@ -207,6 +208,7 @@ void sigterm_handler()
 {
     printf("Recieved SIGTERM...\n");
     inturppted = 1;
+    pthread_cancel(monitor);
     finish();
     exit(0);
 }

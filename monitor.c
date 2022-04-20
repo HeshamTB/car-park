@@ -16,7 +16,7 @@ double ut, ut_previous;
 */
 inline void calc_utilization(double *ut_previous, double *ut) 
 {
-    double ut_now = oc / (double)psize;
+    double ut_now = 100*oc / (double)psize;
     *ut = (*ut_previous + ut_now) / 2;
     *ut_previous = ut_now;
 }

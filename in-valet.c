@@ -34,8 +34,11 @@ void *run_in_valet(void *args){
     setViState(id, FETCH);	// Set the state of in-valet 
     newCar = Qserve();
     setViCar(id, newCar);	// Set the car acquired by the in-valet   
-    sem_post(&mutex);
-   /*release the queue lock*/
+    sem_post(&mutex);   /*release the queue lock*/
+    newCar->vid=id;
+    
+    
+    
     
 
     /*record the car wating time in the queue*/
@@ -63,11 +66,14 @@ void *run_in_valet(void *args){
             setViState(id, MOVE);	// Set the state of in-valet 
             // replace it with the new car
             car_parks[i] = newCar;
+            newCar->sno=i;				// The parking slot number
+            newCar->ptm=time(NULL);		// The time of parking (start time)
+            pk++; // update number of parked cars
             break;
         }
     }
     sem_post(&lock_parked); /*signal a new parked car*/
-    pthread_mutex_lock(&writer); /*release the parking array lock*/
+    pthread_mutex_unlock(&writer); /*release the parking array lock*/
     
     
     
