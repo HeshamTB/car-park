@@ -39,7 +39,7 @@ void init(){
     srand(time(NULL));
     
     //init semaphores
-    sem_init(&arrivals, 0, qsize);
+    sem_init(&arrivals, 0, 0); // Arrival should be 'posted' after a Qenqueue
     sem_init(&sqw_mutex, 0, 1);
     sem_init(&in_held_mutex, 0, 1);
     sem_init(&empty, 0, psize);
@@ -62,6 +62,11 @@ void init(){
     // start monitor thread
     pthread_attr_init(&monitor_thread_attr);
     pthread_create(&monitor, &monitor_thread_attr, run_monitor, NULL);
+
+    if (init_in_valets(in_valets)) {
+        perror("Failed to start in-valet threads\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 
@@ -122,6 +127,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
             sem_wait(&mutex);
             Qenqueue(new_car);
             sem_post(&mutex);
+            sem_post(&arrivals); // Signal an arrival
             /* A car is added to the queue */
         }
     }

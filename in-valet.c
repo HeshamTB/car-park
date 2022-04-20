@@ -29,7 +29,7 @@ void *run_in_valet(void *args){
         
         
     /*get the car from the queue*/    
-    sem_wait(&arrivals); /*wait for arrivals*/   
+    sem_wait(&arrivals); /*wait for arrivals*/
     sem_wait(&mutex);
     setViState(id, FETCH);	// Set the state of in-valet 
     newCar = Qserve();
@@ -99,10 +99,11 @@ int init_in_valets(int number_valets)
         pthread_create(&tid[i],NULL,run_in_valet,(void *)(int64_t)i);
     }
     
-    for (int i=0; i<number_valets; i++){
-         pthread_join(tid[i],NULL);
-    }
+    // for (int i=0; i<number_valets; i++){
+    //      pthread_join(tid[i],NULL);
+    // }
     
+    /* We need to retrun to main */
     
     return 0;
 }
