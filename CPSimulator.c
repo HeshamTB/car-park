@@ -13,6 +13,7 @@
 #include "CarPark.h"
 #include "CPSimulator.h"
 #include "in-valet.h"
+#include "out-valet.h"
 #include "monitor.h"
 #include <string.h>
 
@@ -65,6 +66,11 @@ void init(){
 
     if (init_in_valets(in_valets)) {
         perror("Failed to start in-valet threads\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (init_out_valets(out_valets)){
+        perror("Failed to start out-valet threads\n");
         exit(EXIT_FAILURE);
     }
 }

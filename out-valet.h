@@ -7,7 +7,7 @@
     @returns 0 if successful, 1 if failed
     @author Hesham T. Banafa 
 */
-int init_in_valets(int number_valets);
+int init_out_valets(int number_valets);
 
 /** 
     Entry point for out-valet thread
@@ -15,4 +15,4 @@ int init_in_valets(int number_valets);
     @returns void
     @author Hesham T. Banafa
 */
-void *run_in_valet(void *args);
+void *run_out_valets(void *args);
