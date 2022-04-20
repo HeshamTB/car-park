@@ -3,6 +3,7 @@
 
 
 #include <semaphore.h>
+#include <signal.h>
 
 #ifndef CAR_H
 #include "Car.h"
@@ -27,5 +28,8 @@ void usage();
     @date Apr 17th, 2022
 */
 void process_args(char *argv[], int argc, int *in_val, int *out_val, int *qsize, double *exp_cars);
+
+void sigint_handler();
+void sigterm_handler();
 
 #endif

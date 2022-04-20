@@ -1,11 +1,12 @@
 CC=gcc
 CFLAGS=-c -std=gnu11 -O
 LIBS= -lSDL_bgi -l SDL2 -pthread -lm 
+LDFLAGS=
 
 all: cp
 
 cp: CarPark.o Queue.o CPSimulator.o monitor.o in-valet.o Car.o Queue.h CarPark.h 
-	$(CC) CarPark.o Queue.o CPSimulator.o monitor.o Car.o -o cp $(LIBS)
+	$(CC) CarPark.o Queue.o CPSimulator.o monitor.o Car.o -o cp $(LIBS) $(LDFLAGS)
 
 Queue.o: Queue.c Queue.h
 	$(CC) $(CFLAGS) Queue.c

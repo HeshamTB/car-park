@@ -6,6 +6,8 @@
 #include <sys/cdefs.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdatomic.h>
+#include <signal.h>
 
 #include "CarPark.h"
 #include "CPSimulator.h"
@@ -22,6 +24,7 @@ sem_t mutex, arrivals, sqw_mutex, in_held_mutex, empty, lock_parked, spt_mutex;
 
 pthread_t monitor;
 
+atomic_int inturppted = 0;
 
 /**
     intializes the semaphores, the car park array, the car queue and the GUI
@@ -46,6 +49,10 @@ void init(){
     pthread_mutex_init(&writer,NULL);    
     //init car park array
     car_parks = calloc(psize,sizeof(Car));
+    
+    // setup interrupt handlers
+    signal(SIGINT, sigint_handler);
+    signal(SIGTERM, sigterm_handler);
     
     //init the GUI
     G2DInit(car_parks, psize, in_valets, out_valets, writer);
@@ -176,3 +183,17 @@ void usage()
     fprintf(stderr, "usage: carpark [psize inval outval qsize expnum]");
 }
 
+// TODO: Implement handlers to clean up and print final report to terminal (stdout)
+void sigint_handler()
+{
+    printf("Recieved SIGINT...\n");
+    inturppted = 1;
+    exit(0);
+}
+
+void sigterm_handler()
+{
+    printf("Recieved SIGTERM...\n");
+    inturppted = 1;
+    exit(0);
+}
