@@ -10,6 +10,7 @@
 #include <stdatomic.h>
 #include <signal.h>
 
+
 #include "CarPark.h"
 #include "CPSimulator.h"
 #include "in-valet.h"
@@ -116,13 +117,19 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     
     while (1) {
         sleep(1);
-        int num_newcars = newCars(exp_cars);
+        int num_newcars = newCars(1);
         /* allocate each car individually so we can later free per car */
         for (int i = 0; i < num_newcars; i++) {
             Car *new_car = calloc(1, sizeof(Car));
             
             CarInit(new_car);
             new_car->cid=nc+1;
+            
+            /*add the ltm (expected time to leave)
+            int rand_stay_time = (int)(((double)rand() /RAND_MAX)*180);
+            new_car->ltm=new_car->atm+rand_stay_time;		
+            */
+            
             nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
             if (QisFull()) {
