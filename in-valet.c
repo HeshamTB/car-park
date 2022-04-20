@@ -1,6 +1,8 @@
 #include <pthread.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "in-valet.h"
 #include "CarPark.h"
 #include "CPSimulator.h"
@@ -77,11 +79,12 @@ void *run_in_valet(void *args){
     
     
     
-    
-
+    //sleep((double)rand() / (double)RAND_MAX);
+    sleep(1);
     sem_wait(&in_held_mutex); /*acquire the queue lock*/
     nm--;
     sem_post(&in_held_mutex); /*release the nm lock*/
+    
     setViState(id, READY);	// Set the state of in-valet 
     
 }

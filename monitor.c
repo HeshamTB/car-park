@@ -55,9 +55,9 @@ void *run_monitor(void *args){
     
     while(true){
         calc_utilization(&ut_previous, &ut);
-        show();
-        sleep(1); // sleeps for 1s required in CarPark to complete drawing
         updateStats(oc, nc, pk, rf, nm, sqw, spt, ut);
+        show();
         print_stats();
+        sleep(1); // sleeps for 1s required in CarPark to complete drawing
     }
 }
