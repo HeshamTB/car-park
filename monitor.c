@@ -2,10 +2,10 @@
 #include <unistd.h>
 #include "CPSimulator.h"
 #include "CarPark.h"
-#include "CPSimulator.h"
 
 
-double *ut, *ut_previous;
+double ut, ut_previous;
+
 /** 
     Calculate car-park cumulative utilization
     @param  double ptr  varible of pervious calculation
@@ -46,10 +46,6 @@ void print_stats()
 
 }
 
-
-
-
-
 /** 
     Entry point for monitor thread
     @param Pointer to thread arguments array
@@ -57,13 +53,14 @@ void print_stats()
     @author Muhannad Al-Ghamdi
 */
 void *run_monitor(void *args){
-    *ut = 0;
-    *ut_previous = 0;
+    ut = 0;
+    ut_previous = 0;
     
     while(true){
-//        calc_utilization(ut_previous,ut);
+        calc_utilization(&ut_previous, &ut);
         show();
         sleep(1); // sleeps for 1s required in CarPark to complete drawing
+        updateStats(oc, nc, pk, rf, nm, sqw, spt, ut);
 //        print_stats();
     }
 }

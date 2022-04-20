@@ -1,4 +1,5 @@
 #include <alloca.h>
+#include <bits/pthreadtypes.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,7 @@ pthread_mutex_t writer;
 sem_t mutex, arrivals, sqw_mutex, in_held_mutex, empty, lock_parked, spt_mutex;
 
 pthread_t monitor;
+pthread_attr_t monitor_thread_attr;
 
 atomic_int inturppted = 0;
 
@@ -57,6 +59,9 @@ void init(){
     //init the GUI
     G2DInit(car_parks, psize, in_valets, out_valets, writer);
 
+    // start monitor thread
+    pthread_attr_init(&monitor_thread_attr);
+    pthread_create(&monitor, &monitor_thread_attr, run_monitor, NULL);
 }
 
 
@@ -97,21 +102,22 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
     //[TEST]: test the GUI   
     init();
+    
     while (1) {
-        show();
         sleep(1);
         int num_newcars = newCars(exp_cars);
         /* allocate each car individually so we can later free per car */
         for (int i = 0; i < num_newcars; i++) {
             Car *new_car = calloc(1, sizeof(Car));
             CarInit(new_car);
+            nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
             if (QisFull()) {
                 rf++; // Does not require sync
                 free(new_car);
                 continue; // Car is turned away TODO: update stats
             }
-            pk++;
+            pk++; // TODO move to in-valet done and sync
             /* Aquire queue write lock */
             sem_wait(&mutex);
             Qenqueue(new_car);
