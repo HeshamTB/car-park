@@ -21,9 +21,6 @@ inline void calc_utilization(double *ut_previous, double *ut)
     *ut_previous = ut_now;
 }
 
-
-
-
 /**
     Print current status of the carpark
     @param void
@@ -35,13 +32,13 @@ void print_stats()
 {
     printf("------------------------------[stats]-----------------------------------\n");
     printf("number of ocupied slots = %d\n",oc);
-    printf("total number of created cars = %d\n",nc);
-    printf("total number of allowed to park cars = %d\n",pk);
-    printf("total number of not allowed to park cars = %d\n",rf);
+    printf("total number of created cars = %ld\n",nc);
+    printf("total number of allowed to park cars = %ld\n",pk);
+    printf("total number of not allowed to park cars = %ld\n",rf);
     printf("number of cars currently acquired by in-valets = %d\n",nm);
-    printf("Accumulation sum of car-waiting times in the queue = %d\n",sqw);
-    printf("Accumulation sum of car-parking durations = %d\n",spt);
-    printf("The car-park space utilization = %d\n",ut);
+    printf("Accumulation sum of car-waiting times in the queue = %ld\n",sqw);
+    printf("Accumulation sum of car-parking durations = %ld\n",spt);
+    printf("The car-park space utilization = %0.2f\n",ut);
     printf("------------------------------------------------------------------------\n");
 
 }
@@ -61,6 +58,6 @@ void *run_monitor(void *args){
         show();
         sleep(1); // sleeps for 1s required in CarPark to complete drawing
         updateStats(oc, nc, pk, rf, nm, sqw, spt, ut);
-//        print_stats();
+        print_stats();
     }
 }
