@@ -1,8 +1,8 @@
 #include <pthread.h>
-#include <pthread.h>
 #include <semaphore.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 #include "in-valet.h"
 #include "CarPark.h"
 #include "CPSimulator.h"
@@ -32,8 +32,8 @@ void *run_in_valet(void *args){
         
     /*get the car from the queue*/    
     sem_wait(&arrivals); /*wait for arrivals*/
+    setViState(id, FETCH);	// Set the state of in-valet
     sem_wait(&mutex);
-    setViState(id, FETCH);	// Set the state of in-valet 
     newCar = Qserve();
     setViCar(id, newCar);	// Set the car acquired by the in-valet   
     sem_post(&mutex);   /*release the queue lock*/
@@ -67,6 +67,7 @@ void *run_in_valet(void *args){
         if (car_parks[i] == NULL){
             setViState(id, MOVE);	// Set the state of in-valet 
             // replace it with the new car
+            usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
             car_parks[i] = newCar;
             newCar->sno=i;				// The parking slot number
             newCar->ptm=time(NULL);		// The time of parking (start time)
@@ -74,13 +75,12 @@ void *run_in_valet(void *args){
             break;
         }
     }
+
     sem_post(&lock_parked); /*signal a new parked car*/
     pthread_mutex_unlock(&writer); /*release the parking array lock*/
     
     
     
-    //sleep((double)rand() / (double)RAND_MAX);
-    sleep(1);
     sem_wait(&in_held_mutex); /*acquire the queue lock*/
     nm--;
     sem_post(&in_held_mutex); /*release the nm lock*/
