@@ -53,7 +53,7 @@ void init(){
     // setup interrupt handlers
     signal(SIGINT, sigint_handler);
     signal(SIGTERM, sigterm_handler);
-    
+
     //init the GUI
     G2DInit(car_parks, psize, in_valets, out_valets, writer);
 
@@ -97,30 +97,29 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
     //[TEST]: test the GUI   
     init();
-    int ReqCarNum;
-    while (true){
+    while (1) {
         show();
         sleep(1);
-        ReqCarNum = newCars(1);
-        Car newCars[ReqCarNum];
-        
-        for (int i=0; i<ReqCarNum;i++){
-            if (QisFull()){
-                rf++;
-            }else{
-                pk++;
-                CarInit(&newCars[i]);
-                sem_wait(&mutex);
-                Qenqueue(&newCars[i]);
-                sem_post(&mutex);
-                }
+        int num_newcars = newCars(exp_cars);
+        /* allocate each car individually so we can later free per car */
+        for (int i = 0; i < num_newcars; i++) {
+            Car *new_car = calloc(1, sizeof(Car));
+            CarInit(new_car);
+            /* At this point a new car has arrived  (time is recored for waiting..) */
+            if (QisFull()) {
+                rf++; // Does not require sync
+                free(new_car);
+                continue; // Car is turned away TODO: update stats
             }
+            pk++;
+            /* Aquire queue write lock */
+            sem_wait(&mutex);
+            Qenqueue(new_car);
+            sem_post(&mutex);
+            /* A car is added to the queue */
+        }
     }
-        
-       
-        
-    
-    
+
     //[Test]: testing the GUI (monitor thread)
     //pthread_create(&monitor, NULL, run_monitor, NULL);    
     //pthread_join(monitor,NULL);
@@ -188,6 +187,7 @@ void sigint_handler()
 {
     printf("Recieved SIGINT...\n");
     inturppted = 1;
+    finish();
     exit(0);
 }
 
@@ -195,5 +195,6 @@ void sigterm_handler()
 {
     printf("Recieved SIGTERM...\n");
     inturppted = 1;
+    finish();
     exit(0);
 }
