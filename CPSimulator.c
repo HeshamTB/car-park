@@ -132,10 +132,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
         }
     }
 
-    //[Test]: testing the GUI (monitor thread)
-    //pthread_create(&monitor, NULL, run_monitor, NULL);    
-    //pthread_join(monitor,NULL);
-    
+
     return 0;
 }
 
