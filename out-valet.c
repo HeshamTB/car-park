@@ -49,8 +49,8 @@ void *run_out_valets(void *args)
         */
         setVoState(id, READY);
         sem_wait(&lock_parked); // Wait until there are parked cars
-        setVoState(id, FETCH);
         car = NULL;
+        setVoState(id, WAIT);
         /* Safely read parked cars */
         pthread_mutex_lock(&writer);
         /* Look for car that is due to leave (linear search) */
