@@ -1,6 +1,3 @@
-
-
-
 #include <semaphore.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -12,6 +9,7 @@
 #include <unistd.h>
 #include <math.h>
 #include "CPSimulator.h"
+#include "CarPark.h"
 #include "out-valet.h"
 
 /**
@@ -42,31 +40,40 @@ int init_out_valets(int number_valets)
 void *run_out_valets(void *args)
 {
     int id = (int64_t)args;
-    ++id;
-
+    //++id;
+    Car* car = NULL;
+    
     while (true) {
         /*
             Wait on parked sem. indicates there is cars. Otherwise sleep on it
         */
+        setVoState(id, READY);
         sem_wait(&lock_parked); // Wait until there are parked cars
-        Car* car;
+        setVoState(id, FETCH);
+        car = NULL;
         /* Safely read parked cars */
         pthread_mutex_lock(&writer);
         /* Look for car that is due to leave (linear search) */
         for (int i = 0; i < psize; i++) {
+            time_t now = time(NULL);
             if (car_parks[i] == NULL) continue;
-            if (!(car_parks[i]->ltm < time(NULL))) continue; // To prevent null access segv
+            if (!(car_parks[i]->ptm + car_parks[i]->ltm < now)) continue; // To prevent null access segv
             /* Car i is due to leave */
+            setVoState(id, MOVE);
             car = car_parks[i];      /* Take a refrence */
             car_parks[i] = NULL;     /* Clear parking space */
             oc--;                    /* Safe within writer lock context CS */
+            setVoCar(id, car);
             usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
             break;
         }
         pthread_mutex_unlock(&writer);
         sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
-        
+        setVoCar(id, car);
+
         /* Record parked time */
+        if (car == NULL) continue;
+        
         time_t delta_park_time = time(NULL) - car->ptm;
         sem_wait(&spt_mutex);
         spt += delta_park_time;
