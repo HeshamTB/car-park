@@ -26,4 +26,7 @@ out-valet.o: out-valet.c
 clean:
 	rm cp Queue.o CPSimulator.o monitor.o in-valet.o out-valet.o
 
-	
+run:
+	make clean
+	make -j$(nproc)
+	./cp
