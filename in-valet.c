@@ -76,7 +76,7 @@ void *run_in_valet(void *args){
         }
     }
 
-    sem_post(&lock_parked); /*signal a new parked car*/
+    //sem_post(&lock_parked); /*signal a new parked car*/
     pthread_mutex_unlock(&writer); /*release the parking array lock*/
     
     

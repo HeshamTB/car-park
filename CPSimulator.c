@@ -117,7 +117,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     
     while (1) {
         sleep(1);
-        int num_newcars = newCars(1);
+        int num_newcars = newCars(exp_cars);
         /* allocate each car individually so we can later free per car */
         for (int i = 0; i < num_newcars; i++) {
             Car *new_car = calloc(1, sizeof(Car));

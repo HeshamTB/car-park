@@ -48,7 +48,7 @@ void *run_out_valets(void *args)
             Wait on parked sem. indicates there is cars. Otherwise sleep on it
         */
         setVoState(id, READY);
-        sem_wait(&lock_parked); // Wait until there are parked cars
+        //sem_wait(&lock_parked); // Wait until there are parked cars
         car = NULL;
         setVoState(id, WAIT);
         /* Safely read parked cars */
@@ -68,12 +68,11 @@ void *run_out_valets(void *args)
             break;
         }
         pthread_mutex_unlock(&writer);
-        sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
-        setVoCar(id, car);
 
         /* Record parked time */
         if (car == NULL) continue;
-        
+        sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
+        //setVoCar(id, car);
         time_t delta_park_time = time(NULL) - car->ptm;
         sem_wait(&spt_mutex);
         spt += delta_park_time;
