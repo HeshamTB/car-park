@@ -129,7 +129,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
             CarInit(new_car);
             new_car->cid=nc+1;
             
-            new_car->ltm=(new_car->ltm/180)*20;
+//            new_car->ltm=(new_car->ltm/180)*20;
             
             nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
@@ -238,7 +238,7 @@ void clean_up(){
 
     /*TODO:
      * [] add the remaining stats 
-     * 
+     * [] check for memory leaks
      * */
 
     finish();
