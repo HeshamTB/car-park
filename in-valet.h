@@ -18,4 +18,6 @@ int init_in_valets(int number_valets);
 */
 void *run_in_valet(void *args);
 
+void term_invalets();
+
 #endif

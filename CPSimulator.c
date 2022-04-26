@@ -125,10 +125,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
             CarInit(new_car);
             new_car->cid=nc+1;
             
-            /*add the ltm (expected time to leave)
-            int rand_stay_time = (int)(((double)rand() /RAND_MAX)*180);
-            new_car->ltm=new_car->atm+rand_stay_time;		
-            */
+            new_car->ltm=(new_car->ltm/180)*20;
             
             nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
@@ -205,13 +202,28 @@ void usage()
     fprintf(stderr, "usage: carpark [psize inval outval qsize expnum]");
 }
 
+
+
+void clean_up(){
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    
+    pthread_cancel(monitor);
+    printf("\n\n------------------------------[SUMMARY]-----------------------------------\n");
+    printf("%d-%02d-%02d %02d:%02d:%02d     :   recieved shutdown signal. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    finish();
+    term_invalets();
+    
+}
+
+
+
 // TODO: Implement handlers to clean up and print final report to terminal (stdout)
 void sigint_handler()
 {
     printf("Recieved SIGINT...\n");
     inturppted = 1;
-    pthread_cancel(monitor);
-    finish();
+    clean_up();
     exit(0);
 }
 
@@ -219,7 +231,9 @@ void sigterm_handler()
 {
     printf("Recieved SIGTERM...\n");
     inturppted = 1;
-    pthread_cancel(monitor);
-    finish();
+    clean_up();
     exit(0);
 }
+
+
+

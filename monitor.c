@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <time.h>
 #include "CPSimulator.h"
 #include "CarPark.h"
 
@@ -61,3 +63,6 @@ void *run_monitor(void *args){
         sleep(1); // sleeps for 1s required in CarPark to complete drawing
     }
 }
+
+
+

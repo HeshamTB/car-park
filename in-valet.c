@@ -22,6 +22,10 @@
     @author Muhannad Al-Ghamdi
     @date 18/04/2022
 */
+
+int num_in_valets = 0;
+pthread_t *tid = NULL;
+
 void *run_in_valet(void *args){
     Car*  newCar;
     time_t delta;
@@ -102,18 +106,19 @@ void *run_in_valet(void *args){
 */
 int init_in_valets(int number_valets) 
 {
-    pthread_t tid[number_valets];
+    num_in_valets = number_valets;
+    tid = calloc(number_valets,sizeof(pthread_t));;
     
     for (int i=0; i<number_valets; i++){
         pthread_create(&tid[i],NULL,run_in_valet,(void *)(int64_t)i);
     }
     
-    // for (int i=0; i<number_valets; i++){
-    //      pthread_join(tid[i],NULL);
-    // }
-    
-    /* We need to retrun to main */
-    
     return 0;
+}
+
+void term_invalets(){
+     for (int i=0; i<num_in_valets; i++){
+          pthread_exit(tid[i]);
+     }
 }
 
