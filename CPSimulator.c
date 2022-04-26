@@ -20,6 +20,7 @@
 
 int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
+double exp_cars;
 Car** car_parks = NULL;
 
 pthread_mutex_t writer;
@@ -27,6 +28,9 @@ sem_t mutex, arrivals, sqw_mutex, in_held_mutex, empty, lock_parked, spt_mutex;
 
 pthread_t monitor;
 pthread_attr_t monitor_thread_attr;
+
+
+
 
 atomic_int inturppted = 0;
 
@@ -102,7 +106,7 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     in_valets = IN_VALETS;
     out_valets = OUT_VALETS;
     qsize = QUEUE_SIZE;
-    double exp_cars = EXP_CARS;
+    exp_cars = EXP_CARS;
 
     /* Process arguments */
     process_args(argv, argc, &in_valets, &out_valets, &qsize, &exp_cars);
@@ -210,12 +214,32 @@ void clean_up(){
     
     printf("\n\n------------------------------[SUMMARY]-----------------------------------\n");
     printf("%d-%02d-%02d %02d:%02d:%02d     :   recieved shutdown signal. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    t = time(NULL); tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   The valets are leaving. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     term_invalets();
     term_outvalets();
+    t = time(NULL);tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   done %d valets left. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
     pthread_cancel(monitor);
+    t = time(NULL);tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   monitor exiting... \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
+    
+    //TODO: [] add the simulation start time
+    
+    printf("Park Space Capacity was:    %d cars.\n",psize);
+    printf("Allowed queue length was:    %d cars.\n",qsize);
+    printf("Number of in valets was:    %d.\n",in_valets);
+    printf("Number of out valets was:    %d.\n",out_valets);
+    printf("Expected arrivals was:    %f.\n",exp_cars);
+    
+    t = time(NULL);tm = *localtime(&t);
+    printf("Simulation stopped at:      %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
+
+
+    /*TODO:
+     * [] add the remaining stats 
+     * 
+     * */
 
     finish();
 
