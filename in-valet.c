@@ -118,7 +118,7 @@ int init_in_valets(int number_valets)
 
 void term_invalets(){
      for (int i=0; i<num_in_valets; i++){
-          pthread_exit(tid[i]);
+          pthread_cancel(tid[i]);
      }
 }
 
