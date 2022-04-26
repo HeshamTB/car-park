@@ -65,14 +65,12 @@ void *run_out_valets(void *args)
         }
         turn++;
         if (turn == out_valets) turn = 0; /* Reset to first thread */
-        printf("out-valet %d checking\n", id);
         
         /* Safely read parked cars */
-        /* Look for car that is due to leave (linear search) */
-        int j = 0;
         while (car == NULL) {
             /* Aquire car_park lock */
             pthread_mutex_lock(&writer);
+            /* Look for car that is due to leave (linear search) */
             for (int i = 0; i < psize; i++) {
                 if (car_parks[i] == NULL) continue; /* Empty slot */
                 if (!(car_parks[i]->ltm + car_parks[i]->ptm < time(NULL))) continue;
@@ -81,6 +79,7 @@ void *run_out_valets(void *args)
                 car_parks[i] = NULL;     /* Clear parking space */
                 oc--;                    /* Safe within writer lock context CS */
                 setVoCar(id, car);
+                sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
                 usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
                 break;
             }
@@ -90,7 +89,6 @@ void *run_out_valets(void *args)
 
         /* Record parked time */
 
-        sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
         //setVoCar(id, car);
         time_t delta_park_time = time(NULL) - car->ptm;
         sem_wait(&spt_mutex);
