@@ -33,75 +33,74 @@ void *run_in_valet(void *args){
     turn_in =0;
     while (true){
         
+        setViState(id, READY);	// Set the state of in-valet 
+    
+        /*get the car from the queue*/    
+        sem_wait(&arrivals); /*wait for arrivals*/
+        sem_wait(&mutex);
         
-    /*get the car from the queue*/    
-    sem_wait(&arrivals); /*wait for arrivals*/
-    setViState(id, FETCH);	// Set the state of in-valet
-    sem_wait(&mutex);
-    
-    /* A solution to prevent starvation and operate in a RR */
-    if (turn_in != id) {
-        /* Not our turn */
-        sem_post(&arrivals); sem_post(&mutex); continue; /* Release lock and go back */
-    }
-    turn_in++;
-    if (turn_in == num_in_valets) turn_in = 0; /* Reset to first thread */
-
-
-    newCar = Qserve();
-    setViCar(id, newCar);	// Set the car acquired by the in-valet   
-    sem_post(&mutex);   /*release the queue lock*/
-    newCar->vid=id;
-    
-    
-    
-    
-
-    /*record the car wating time in the queue*/
-    delta = time(NULL) - newCar->atm;
-    sem_wait(&sqw_mutex); /*acquire the lock for Accumulation sum of car-waiting times in the queue*/
-    sqw += delta;
-    sem_post(&sqw_mutex); /*release the lock for Accumulation sum of car-waiting times in the queue*/
-
-
-    /*update the number of cars currently acquired by in-valets*/
-    sem_wait(&in_held_mutex); /*acquire the nm lock*/
-    nm++;
-    sem_post(&in_held_mutex); /*release the nm lock*/
-    
-    
-    
-    setViState(id, WAIT);	// Set the state of in-valet 
-    /*park/serve the acquired car*/
-    sem_wait(&empty); /*wait for empty slot in the parking area*/
-    pthread_mutex_lock(&writer); /*acquire the parking array lock*/
-    oc++;
-    //find NULL locations in the parking array
-    for (int i=0; i<psize; i++){
-        if (car_parks[i] == NULL){
-            setViState(id, MOVE);	// Set the state of in-valet 
-            // replace it with the new car
-            usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
-            car_parks[i] = newCar;
-            newCar->sno=i;				// The parking slot number
-            newCar->ptm=time(NULL);		// The time of parking (start time)
-            pk++; // update number of parked cars
-            break;
+        /* A solution to prevent starvation and operate in a RR */
+        if (turn_in != id) {
+            /* Not our turn */
+            sem_post(&arrivals); sem_post(&mutex); continue; /* Release lock and go back */
         }
-    }
+        turn_in++;
+        if (turn_in == num_in_valets) turn_in = 0; /* Reset to first thread */
 
-    //sem_post(&lock_parked); /*signal a new parked car*/
-    pthread_mutex_unlock(&writer); /*release the parking array lock*/
-    
-    
-    
-    sem_wait(&in_held_mutex); /*acquire the queue lock*/
-    nm--;
-    sem_post(&in_held_mutex); /*release the nm lock*/
-    
-    setViState(id, READY);	// Set the state of in-valet 
-    
-}
+        setViState(id, FETCH);	// fetching car from queue
+        
+        newCar = Qserve();
+        setViCar(id, newCar);	// Set the car acquired by the in-valet   
+        sem_post(&mutex);   /*release the queue lock*/
+        newCar->vid=id;
+        
+        
+        
+        
+
+        /*record the car wating time in the queue*/
+        delta = time(NULL) - newCar->atm;
+        sem_wait(&sqw_mutex); /*acquire the lock for Accumulation sum of car-waiting times in the queue*/
+        sqw += delta;
+        sem_post(&sqw_mutex); /*release the lock for Accumulation sum of car-waiting times in the queue*/
+
+
+        /*update the number of cars currently acquired by in-valets*/
+        sem_wait(&in_held_mutex); /*acquire the nm lock*/
+        nm++;
+        sem_post(&in_held_mutex); /*release the nm lock*/
+        
+        
+        
+        setViState(id, WAIT);	// Set the state of in-valet 
+        /*park/serve the acquired car*/
+        sem_wait(&empty); /*wait for empty slot in the parking area*/
+        pthread_mutex_lock(&writer); /*acquire the parking array lock*/
+        oc++;
+        //find NULL locations in the parking array
+        for (int i=0; i<psize; i++){
+            if (car_parks[i] == NULL){
+                setViState(id, MOVE);	// Set the state of in-valet 
+                // replace it with the new car
+                usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
+                car_parks[i] = newCar;
+                newCar->sno=i;				// The parking slot number
+                newCar->ptm=time(NULL);		// The time of parking (start time)
+                pk++; // update number of parked cars
+                break;
+            }
+        }
+
+        //sem_post(&lock_parked); /*signal a new parked car*/
+        pthread_mutex_unlock(&writer); /*release the parking array lock*/
+        
+        
+        
+        sem_wait(&in_held_mutex); /*acquire the queue lock*/
+        nm--;
+        sem_post(&in_held_mutex); /*release the nm lock*/
+                
+    }
 }
 
 
