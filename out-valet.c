@@ -14,7 +14,7 @@
 #include "out-valet.h"
 
 
-sem_t lock_check;
+sem_t lock_check;  //can we move it to init in CPSimulator.c ? 
 atomic_int turn;
 
 int num_out_valets = 0;

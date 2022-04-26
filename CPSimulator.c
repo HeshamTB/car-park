@@ -230,7 +230,7 @@ void clean_up(){
     printf("Allowed queue length was:    %d cars.\n",qsize);
     printf("Number of in valets was:    %d.\n",in_valets);
     printf("Number of out valets was:    %d.\n",out_valets);
-    printf("Expected arrivals was:    %f.\n",exp_cars);
+    printf("Expected arrivals was:    %.2f.\n",exp_cars);
     
     t = time(NULL);tm = *localtime(&t);
     printf("Simulation stopped at:      %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));

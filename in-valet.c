@@ -1,16 +1,14 @@
+#include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdatomic.h>
 #include "in-valet.h"
 #include "CarPark.h"
 #include "CPSimulator.h"
 #include "Queue.h"
-
-
-
-
 
 
 
@@ -25,12 +23,14 @@
 
 int num_in_valets = 0;
 pthread_t *tid = NULL;
+atomic_int turn_in;
 
 void *run_in_valet(void *args){
     Car*  newCar;
     time_t delta;
     int id;
     id = (int64_t)args;
+    turn_in =0;
     while (true){
         
         
@@ -38,6 +38,16 @@ void *run_in_valet(void *args){
     sem_wait(&arrivals); /*wait for arrivals*/
     setViState(id, FETCH);	// Set the state of in-valet
     sem_wait(&mutex);
+    
+    /* A solution to prevent starvation and operate in a RR */
+    if (turn_in != id) {
+        /* Not our turn */
+        sem_post(&arrivals); sem_post(&mutex); continue; /* Release lock and go back */
+    }
+    turn_in++;
+    if (turn_in == num_in_valets) turn_in = 0; /* Reset to first thread */
+
+
     newCar = Qserve();
     setViCar(id, newCar);	// Set the car acquired by the in-valet   
     sem_post(&mutex);   /*release the queue lock*/
