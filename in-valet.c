@@ -107,7 +107,7 @@ void *run_in_valet(void *args){
 int init_in_valets(int number_valets) 
 {
     num_in_valets = number_valets;
-    tid = calloc(number_valets,sizeof(pthread_t));;
+    tid = calloc(number_valets,sizeof(pthread_t));
     
     for (int i=0; i<number_valets; i++){
         pthread_create(&tid[i],NULL,run_in_valet,(void *)(int64_t)i);

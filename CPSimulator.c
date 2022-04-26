@@ -208,11 +208,19 @@ void clean_up(){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     
-    pthread_cancel(monitor);
     printf("\n\n------------------------------[SUMMARY]-----------------------------------\n");
     printf("%d-%02d-%02d %02d:%02d:%02d     :   recieved shutdown signal. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-    finish();
+    printf("%d-%02d-%02d %02d:%02d:%02d     :   The valets are leaving. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     term_invalets();
+    term_outvalets();
+    printf("%d-%02d-%02d %02d:%02d:%02d     :   done %d valets left. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
+    pthread_cancel(monitor);
+    printf("%d-%02d-%02d %02d:%02d:%02d     :   monitor exiting... \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
+
+    finish();
+
+
+
     
 }
 

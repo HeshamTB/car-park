@@ -16,3 +16,5 @@ int init_out_valets(int number_valets);
     @author Hesham T. Banafa
 */
 void *run_out_valets(void *args);
+
+void term_outvalets();

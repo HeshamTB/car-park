@@ -17,6 +17,10 @@
 sem_t lock_check;
 atomic_int turn;
 
+int num_out_valets = 0;
+pthread_t *tid_out = NULL;
+
+
 /**
     Initialize out-valet thread-pool
     @param Number of valets to start
@@ -25,8 +29,11 @@ atomic_int turn;
 */
 int init_out_valets(int number_valets)
 {
+    num_out_valets = number_valets;
+    tid_out = calloc(number_valets,sizeof(pthread_t));
+    
     pthread_t out_valet_threads[number_valets];
-    sem_init(&lock_check, 0, 1);
+    sem_init(&lock_check, 0, 1);                //we may need to move it to init in CPSimulator.c
     turn = 0;
     for (int i = 0; i < number_valets; i++) {
         pthread_create(&out_valet_threads[i],
@@ -99,4 +106,11 @@ void *run_out_valets(void *args)
     }
 
     pthread_exit(0);
+}
+
+
+void term_outvalets(){
+     for (int i=0; i<num_out_valets; i++){
+          pthread_cancel(tid_out[i]);
+     }
 }
