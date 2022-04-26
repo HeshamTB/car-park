@@ -9,7 +9,7 @@
 #include "Car.h"
 #endif
 
-extern int oc, nm, psize;
+extern int oc, nm, psize, out_valets;
 extern long nc, pk, rf, sqw, spt;
 extern sem_t mutex, arrivals, sqw_mutex, in_held_mutex, empty, lock_parked, spt_mutex;
 extern pthread_mutex_t writer;

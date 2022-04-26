@@ -1,4 +1,5 @@
 #include <semaphore.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -12,6 +13,10 @@
 #include "CarPark.h"
 #include "out-valet.h"
 
+
+sem_t lock_check;
+atomic_int turn;
+
 /**
     Initialize out-valet thread-pool
     @param Number of valets to start
@@ -21,7 +26,8 @@
 int init_out_valets(int number_valets)
 {
     pthread_t out_valet_threads[number_valets];
-
+    sem_init(&lock_check, 0, 1);
+    turn = 0;
     for (int i = 0; i < number_valets; i++) {
         pthread_create(&out_valet_threads[i],
                        NULL,
@@ -49,28 +55,41 @@ void *run_out_valets(void *args)
         */
         setVoState(id, READY);
         //sem_wait(&lock_parked); // Wait until there are parked cars
-        car = NULL;
+
+        sem_wait(&lock_check);
         setVoState(id, WAIT);
-        /* Safely read parked cars */
-        pthread_mutex_lock(&writer);
-        /* Look for car that is due to leave (linear search) */
-        for (int i = 0; i < psize; i++) {
-            time_t now = time(NULL);
-            if (car_parks[i] == NULL) continue;
-            if (!(car_parks[i]->ptm + car_parks[i]->ltm < now)) continue; // To prevent null access segv
-            /* Car i is due to leave */
-            setVoState(id, MOVE);
-            car = car_parks[i];      /* Take a refrence */
-            car_parks[i] = NULL;     /* Clear parking space */
-            oc--;                    /* Safe within writer lock context CS */
-            setVoCar(id, car);
-            usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
-            break;
+        /* A solution to prevent starvation and operate in a RR */
+        if (turn != id) {
+            /* Not our turn */
+            sem_post(&lock_check); continue; /* Release lock and go back */
         }
-        pthread_mutex_unlock(&writer);
+        turn++;
+        if (turn == out_valets) turn = 0; /* Reset to first thread */
+        printf("out-valet %d checking\n", id);
+        
+        /* Safely read parked cars */
+        /* Look for car that is due to leave (linear search) */
+        int j = 0;
+        while (car == NULL) {
+            /* Aquire car_park lock */
+            pthread_mutex_lock(&writer);
+            for (int i = 0; i < psize; i++) {
+                if (car_parks[i] == NULL) continue; /* Empty slot */
+                if (!(car_parks[i]->ltm + car_parks[i]->ptm < time(NULL))) continue;
+                setVoState(id, MOVE);
+                car = car_parks[i];      /* Take a refrence */
+                car_parks[i] = NULL;     /* Clear parking space */
+                oc--;                    /* Safe within writer lock context CS */
+                setVoCar(id, car);
+                usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
+                break;
+            }
+            pthread_mutex_unlock(&writer);
+        }
+        sem_post(&lock_check);
 
         /* Record parked time */
-        if (car == NULL) continue;
+
         sem_post(&empty); /* Signal an empty slot */ // TODO if we make this point to an index we can save time
         //setVoCar(id, car);
         time_t delta_park_time = time(NULL) - car->ptm;
@@ -78,6 +97,7 @@ void *run_out_valets(void *args)
         spt += delta_park_time;
         sem_post(&spt_mutex);
         free(car);
+        car = NULL;
     }
 
     pthread_exit(0);
