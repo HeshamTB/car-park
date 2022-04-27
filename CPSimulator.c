@@ -227,12 +227,10 @@ void clean_up(){
     term_outvalets();
     t = time(NULL);tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   done %d valets left. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
-    sleep(2);       // to make sure the GUI is updated compared to the printed stats
-    pthread_cancel(monitor);
+    term_monitor(monitor);
     t = time(NULL);tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   monitor exiting... \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
     
-    //TODO: [] add the simulation start time
     printf("Simulation started at %d-%02d-%02d %02d:%02d:%02d \n", st_tm.tm_year + 1900, st_tm.tm_mon + 1, st_tm.tm_mday, st_tm.tm_hour, st_tm.tm_min, st_tm.tm_sec);
 
     printf("Park Space Capacity was:    %d cars.\n",psize);
@@ -244,7 +242,6 @@ void clean_up(){
     t = time(NULL);tm = *localtime(&t);
     printf("Simulation stopped at:      %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
     
-    //TODO executed for
     printf("CP Simulation was executed for:     %d seconds\n",t-start_time);
     printf("Total number of cars processed:     %d\n",nc);
     printf("Number of cars that parked:     %d\n",pk);

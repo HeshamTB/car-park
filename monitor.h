@@ -30,4 +30,4 @@ void calc_utilization(double *ut_previous, double *ut);
     @author Muhannad Al-Ghamdi
 */
 void print_stats();
-
+void term_monitor(pthread_t tid);

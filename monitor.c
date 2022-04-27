@@ -64,5 +64,11 @@ void *run_monitor(void *args){
     }
 }
 
-
+void term_monitor(pthread_t tid){
+    calc_utilization(&ut_previous, &ut);
+    updateStats(oc, nc, pk, rf, nm, sqw, spt, ut);
+    show();
+    sleep(1); // sleeps for 1s required in CarPark to complete drawing
+    pthread_cancel(tid);
+}
 
