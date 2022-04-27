@@ -1,5 +1,10 @@
 #include <pthread.h>
 
+
+
+
+extern double ut;
+
 /** 
     Entry point for monitor thread
     @param Pointer to thread arguments array
@@ -25,3 +30,4 @@ void calc_utilization(double *ut_previous, double *ut);
     @author Muhannad Al-Ghamdi
 */
 void print_stats();
+
