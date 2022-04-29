@@ -53,18 +53,14 @@ int init_out_valets(int number_valets)
 void *run_out_valets(void *args)
 {
     int id = (int64_t)args;
-    //++id;
     Car* car = NULL;
     
     while (true) {
-        /*
-            Wait on parked sem. indicates there is cars. Otherwise sleep on it
-        */
-        setVoState(id, READY);
-        //sem_wait(&lock_parked); // Wait until there are parked cars
 
+        setVoState(id, READY);
         sem_wait(&lock_check);
         setVoState(id, WAIT);
+
         /* A solution to prevent starvation and operate in a RR */
         if (turn != id) {
             /* Not our turn */
@@ -73,7 +69,6 @@ void *run_out_valets(void *args)
         turn++;
         if (turn == out_valets) turn = 0; /* Reset to first thread */
         
-        /* Safely read parked cars */
         while (car == NULL) {
             /* Aquire car_park lock */
             pthread_mutex_lock(&writer);
@@ -95,8 +90,6 @@ void *run_out_valets(void *args)
         sem_post(&lock_check);
 
         /* Record parked time */
-
-        //setVoCar(id, car);
         time_t delta_park_time = time(NULL) - car->ptm;
         sem_wait(&spt_mutex);
         spt += delta_park_time;

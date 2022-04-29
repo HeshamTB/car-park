@@ -121,7 +121,6 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
 
 
 
-    //[TEST]: test the GUI   
     init();
     
     while (1) {
@@ -134,14 +133,13 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
             CarInit(new_car);
             new_car->cid=nc+1;
             
-//            new_car->ltm=(new_car->ltm/180)*20;
             
             nc++;
             /* At this point a new car has arrived  (time is recored for waiting..) */
             if (QisFull()) {
                 rf++; // Does not require sync
                 free(new_car);
-                continue; // Car is turned away TODO: update stats
+                continue; // Car is turned away
             }
             /* Aquire queue write lock */
             sem_wait(&mutex);

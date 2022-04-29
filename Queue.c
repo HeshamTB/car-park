@@ -7,8 +7,6 @@
     This is a Queue implementaion using basic array, not linked lists
     Thus, head, tail are indicies to an array.
     Circular array-based queue
-
-    TODO: correctly set value of tail
 */
 static Queue queue;
 static int first = 1;
