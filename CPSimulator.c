@@ -240,17 +240,17 @@ void clean_up(){
     t = time(NULL);tm = *localtime(&t);
     printf("Simulation stopped at:      %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
     
-    printf("CP Simulation was executed for:     %d seconds\n",t-start_time);
-    printf("Total number of cars processed:     %d\n",nc);
-    printf("Number of cars that parked:     %d\n",pk);
-    printf("Number of cars turned away:     %d\n",rf);
-    printf("Number of cars in transit:     %d\n",nc-(pk+rf+Qsize()));  //check if it right (the cars that are with the valets)
+    printf("CP Simulation was executed for:     %ld seconds\n",t-start_time);
+    printf("Total number of cars processed:     %ld\n",nc);
+    printf("Number of cars that parked:     %ld\n",pk);
+    printf("Number of cars turned away:     %ld\n",rf);
+    printf("Number of cars in transit:     %ld\n",nc-(pk+rf+Qsize()));  //check if it right (the cars that are with the valets)
     printf("Number of cars still queued:     %d\n",Qsize());
     printf("Number of cars still parked:     %d\n",oc);
 
     printf("Average queue waiting time:     %.3f\n",sqw);
     printf("Average parking time:     %.3f\n",spt);
-    printf("Percentage of park utilization:     %.3f%\n",ut);
+    printf("Percentage of park utilization:     %.3f%%\n",ut);
     
     /*TODO:
      * [] check for memory leaks
