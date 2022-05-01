@@ -9,6 +9,7 @@
 #include <time.h>
 #include <stdatomic.h>
 #include <signal.h>
+#include <string.h>
 
 
 #include "CarPark.h"
@@ -16,12 +17,13 @@
 #include "in-valet.h"
 #include "out-valet.h"
 #include "monitor.h"
-#include <string.h>
+#include "PriorityQueue.h"
+
 
 int oc, nm, psize, in_valets, out_valets, qsize;
 long nc, pk, rf, sqw, spt;
 double exp_cars;
-Car** car_parks = NULL;
+//Car** car_parks = NULL;
 struct tm st_tm ;
 
 pthread_mutex_t writer;
@@ -57,14 +59,16 @@ void init(){
     //init the mutex for car park
     pthread_mutex_init(&writer,NULL);    
     //init car park array
-    car_parks = calloc(psize,sizeof(Car));
+//    car_parks = calloc(psize,sizeof(Car));
+    
+    PQinit(psize);
     
     // setup interrupt handlers
     signal(SIGINT, sigint_handler);
     signal(SIGTERM, sigterm_handler);
 
     //init the GUI
-    G2DInit(car_parks, psize, in_valets, out_valets, writer);
+    G2DInit(PQgetList(), psize, in_valets, out_valets, writer);
 
     // start monitor thread
     pthread_attr_init(&monitor_thread_attr);
@@ -75,10 +79,10 @@ void init(){
         exit(EXIT_FAILURE);
     }
 
-    if (init_out_valets(out_valets)){
-        perror("Failed to start out-valet threads\n");
-        exit(EXIT_FAILURE);
-    }
+//    if (init_out_valets(out_valets)){
+//        perror("Failed to start out-valet threads\n");
+//        exit(EXIT_FAILURE);
+//    }
 }
 
 
@@ -222,7 +226,7 @@ void clean_up(){
     t = time(NULL); tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   The valets are leaving. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     term_invalets();
-    term_outvalets();
+//    term_outvalets();
     t = time(NULL);tm = *localtime(&t);
     printf("%d-%02d-%02d %02d:%02d:%02d     :   done %d valets left. \n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,(in_valets+out_valets));
     term_monitor(monitor);

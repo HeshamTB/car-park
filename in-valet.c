@@ -9,6 +9,7 @@
 #include "CarPark.h"
 #include "CPSimulator.h"
 #include "Queue.h"
+#include "PriorityQueue.h"
 
 
 
@@ -78,18 +79,14 @@ void *run_in_valet(void *args){
         pthread_mutex_lock(&writer); /*acquire the parking array lock*/
         oc++;
         //find NULL locations in the parking array
-        for (int i=0; i<psize; i++){
-            if (car_parks[i] == NULL){
-                setViState(id, MOVE);	// Set the state of in-valet 
-                // replace it with the new car
-                usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
-                car_parks[i] = newCar;
-                newCar->sno=i;				// The parking slot number
-                newCar->ptm=time(NULL);		// The time of parking (start time)
-                pk++; // update number of parked cars
-                break;
-            }
-        }
+        
+        setViState(id, MOVE);
+        usleep((int)(((double)rand() /RAND_MAX)*pow(10,6)));
+        PQenqueue(newCar);
+        newCar->sno=PQsize()-1;
+        newCar->ptm=time(NULL);		// The time of parking (start time)
+
+        pk++;
 
         //sem_post(&lock_parked); /*signal a new parked car*/
         pthread_mutex_unlock(&writer); /*release the parking array lock*/

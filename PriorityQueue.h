@@ -18,10 +18,12 @@
  * =============================================================================
  */
 typedef struct PQueue_t {
-    Car **data;       		// Array to hold car queue
+    Car **list;       		// Array to hold car queue
     int capacity;      		// The array (queue) capacity
     int count;              // Number of cars currently in the queue
 } PriorityQueue;
+
+
 
 /* =============================================================================
  * Initialize the feilds of a Queue structure instance.
@@ -85,5 +87,7 @@ bool PQisFull();
  * ===========================================================================
  */
 bool PQisEmpty();
+
+Car** PQgetList();
 
 #endif

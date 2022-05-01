@@ -10,15 +10,29 @@
 */
 static PriorityQueue pqueue;
 
+struct CarNode {
+   int idx;
+   Car *car;
+};
+
+struct CarNode *data; 
+
 /* =============================================================================
  * Initialize the feilds of a Queue structure instance.
  * =============================================================================
  */
 void PQinit(int n)
-{
+{   
     pqueue.capacity = n;
     pqueue.count = 0;
-    pqueue.data = malloc(sizeof(Car)*pqueue.capacity); // Returns a ptr to array of car ptrs
+    pqueue.list = malloc(sizeof(Car)*pqueue.capacity); // Returns a ptr to array of car ptrs
+    data = calloc(pqueue.capacity,sizeof(struct CarNode));
+    
+    for (int i = 0; i < pqueue.capacity; i++) {
+        pqueue.list[i] = NULL; 
+    }
+
+    
 }
 
 /* =============================================================================
@@ -28,7 +42,8 @@ void PQinit(int n)
 void PQfree()
 {
     // The only runtime allocated memory are the list and data fields.
-    free(pqueue.data);
+    free(data);
+    free(pqueue.list);
 }
 
 /* =============================================================================
@@ -37,10 +52,12 @@ void PQfree()
  */
 void PQclear()
 {
+
     for (int i = 0; i < pqueue.capacity; i++) {
-        pqueue.data[i] = NULL; 
+        pqueue.list[i] = NULL; 
     }
-    free(pqueue.data);
+    free(data);
+    free(pqueue.list);
     PQinit(pqueue.capacity); // Should reset all 
 }
 
@@ -59,22 +76,42 @@ void PQenqueue(Car *car)
     int count = pqueue.count;
     
     if (count==0){
-        pqueue.data[0]=car;
+        struct CarNode new_car;
+        new_car.car=car;
+        new_car.idx=0;
+        
+        data[0]=new_car;
+        pqueue.list[new_car.idx]=car;
         pqueue.count++;
         return; 
     }
     
     for (int i=0 ; i<count;i++){
-        if(car->ltm < pqueue.data[i]->ltm){
+        if(car->ltm < data[i].car->ltm){
             for (int j=count ; j>i ; j--){
-                pqueue.data[j]=pqueue.data[j-1];
+                data[j]=data[j-1];
             }
-            pqueue.data[i]=car;
+            
+            struct CarNode new_car;
+            new_car.car=car;
+            new_car.idx=count;
+        
+            data[i]=new_car;
+            pqueue.list[new_car.idx]=car;
+            
             pqueue.count++;
+            
             return;
         }
     }
-    pqueue.data[count]=car;
+    
+    struct CarNode new_car;
+    new_car.car=car;
+    new_car.idx=count;
+
+    data[count]=new_car;
+    pqueue.list[new_car.idx]=car;
+    
     pqueue.count++;
     
 }
@@ -88,27 +125,23 @@ void PQenqueue(Car *car)
 Car* PQserve()
 {
     if (PQisEmpty()) return NULL;
-    Car *result = pqueue.data[0];
-    pqueue.data[0]=NULL;
+    
+    
+    Car *result = data[0].car;
+    int idx = data[0].idx;
+    
+    pqueue.list[idx]=NULL;
+    
+    struct CarNode new_car;
+    data[0]= new_car;
     pqueue.count--;
+    
     for (int i =0; i<pqueue.count; i++){
-        pqueue.data[i]=pqueue.data[i+1];
+        data[i]=data[i+1];
     }
     return result;
     
-// 
-//    
-//    for (int i=0 ; i<counts;i++){
-//        if (queue.data[i]==NULL) continue;
-//        if(queue.data[i]->ltm < result->ltm){
-//            result = queue.data[i];
-//            idx = i;
-//        }
-//    }
-//
-//    queue.data[idx] = NULL; // Clear slot
-//    queue.count--;
-//    return result;
+
 }
 
 /* ===========================================================================
@@ -117,7 +150,7 @@ Car* PQserve()
  */
 Car* PQpeek()
 {    
-    return pqueue.data[0];
+    return data[0].car;
 }
 
 
@@ -156,4 +189,14 @@ bool PQisEmpty()
 {
     return pqueue.count == 0;
 }
+
+/* ===========================================================================
+ * Return a list of the queue contents and its size.
+ * ===========================================================================
+ */
+Car** PQgetList()
+{
+    return pqueue.list;
+}
+
 
