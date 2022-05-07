@@ -3,7 +3,8 @@ Difficulties:
     - Learned the hard way, POSIX semaphores do not gurantee FIFO behaviour
     - Learned the use of "extern" keyword to define global varibales accross
         compile units (object files)
-    - Avoid multiple header includes with header guards
+    - Avoid multiple header includes with header guards.
+fortunately, these difficulties were treated well and had no bad influence on the final solution.
 
 
 Realized from desgin:
