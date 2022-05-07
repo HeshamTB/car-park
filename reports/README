@@ -1,0 +1,26 @@
+
+Difficulties:
+    - Learned the hard way, POSIX semaphores do not gurantee FIFO behaviour
+    - Learned the use of "extern" keyword to define global varibales accross
+        compile units (object files)
+    - Avoid multiple header includes with header guards
+
+Realized from desgin:
+    - No busy waiting for syncornization events
+    - 
+
+Failed to realize:
+    - out-valets should be sleeping until cars are due.
+        As mentioned in updated design, this method is not
+        sound logically.
+    - 
+
+Build:
+    "make" or "make all"
+    to clear old build
+    "make clean"
+
+Comments:
+    - Noticed low CPU utilization during runtime
+    - There is a degree of concurrnacy in the simulation
+        between the critical sections
