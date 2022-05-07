@@ -5,20 +5,30 @@ Difficulties:
         compile units (object files)
     - Avoid multiple header includes with header guards
 
+
 Realized from desgin:
     - No busy waiting for syncornization events
     - synchronized access to the waiting queue
     - synchronized access to the parking
-    - The stats varibles were shared and synchronized between the muliple threads
+    - The stats varaibles were shared and synchronized between the muliple threads as designed to.
 
 
 Failed to realize:
-    - out-valets should be sleeping until cars are due.
-        As mentioned in updated design, this method is not
-        sound logically.
-    - the intiall deaign failed to avoid the deadlock due to the wait for in-valet 
-        to signal new parked cars but this is will cause a deadlock when the park is full. 
-        This was solved in the updated design by changing the locking mechanism.
+    - the intiall design was designed to use a binary semaphore to guarentee the mutual 
+        exclusion between the out-valets threads. This caused unfair load balancing as we assumed the 
+         POSIX semaphores to guarentee a FIFO behavoiur but it did not. We solved this in the 
+         updated design by applying a load balancing mechanism between the out-valets.
+  - the intiall design also used a binary semaphore to guarentee the mutual exclusion between the in-valets threads
+         when accessing the parking area. This caused unfair load balancing between the in-valets when trying to park 
+         a car. For the same reason above the POSIX semaphores does not guarentee a FIFO behavoiur. So We solved
+         this in the updated design by applying a load balancing mechanism between the in-valets when accessing the
+         parking area.
+    - the intiall design failed to avoid the deadlock due to the wait for in-valet to signal new parked cars but this is will 
+       cause a deadlock when the park is full. As the Out-valets will be waiting for in-valets to signal new cars while the 
+        car park is full. This was solved in the updated design by changing the locking mechanism.
+    - out-valets should be sleeping until cars are due. As mentioned in updated design, this method is not sound
+        logically. So one out-valet is always looking for cars due and when found it gives the next valet the chance to 
+        find other cars.
 
 
 Build:
@@ -26,7 +36,9 @@ Build:
     to clear old build
     "make clean"
 
+
 Comments:
     - Noticed low CPU utilization during runtime
     - There is a degree of concurrnacy in the simulation
         between the critical sections
+    - The provided solution guarentees no deadlock, starvation or memorey leaks.
