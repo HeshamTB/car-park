@@ -210,7 +210,11 @@ void usage()
 }
 
 
-
+/**
+    cleaning up and printing the stats
+    @author Muhannad Al-Ghamdi
+    @date Apr 25th, 2022
+*/
 void clean_up(){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
@@ -251,10 +255,6 @@ void clean_up(){
     printf("Average queue waiting time:     %.3f\n",sqw);
     printf("Average parking time:     %.3f\n",spt);
     printf("Percentage of park utilization:     %.3f%%\n",ut);
-    
-    /*TODO:
-     * [] check for memory leaks
-     * */
 
     finish();
 
@@ -264,8 +264,11 @@ void clean_up(){
 }
 
 
-
-// TODO: Implement handlers to clean up and print final report to terminal (stdout)
+/**
+    Signal Handler for interuption
+    @author Hesham T. Banafa
+    @date Apr 16th, 2022
+*/
 void sigint_handler()
 {
     printf("Recieved SIGINT...\n");
@@ -274,6 +277,11 @@ void sigint_handler()
     exit(0);
 }
 
+/**
+    Signal Handler for termination
+    @author Hesham T. Banafa
+    @date Apr 16th, 2022
+*/
 void sigterm_handler()
 {
     printf("Recieved SIGTERM...\n");

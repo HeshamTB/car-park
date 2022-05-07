@@ -14,7 +14,8 @@ double ut, ut_previous;
     @param  double ptr to utilization variable
     @return void
     @author Muhannad Al-Ghamdi
-    @precondition N/A 
+    @precondition N/A
+    @data 15/04/2022
 */
 inline void calc_utilization(double *ut_previous, double *ut) 
 {
@@ -29,6 +30,7 @@ inline void calc_utilization(double *ut_previous, double *ut)
     @return void
     @author Muhannad Al-Ghamdi
     @precondition N/A
+    @data 15/04/2022
 */
 void print_stats()
 {
@@ -50,6 +52,7 @@ void print_stats()
     @param Pointer to thread arguments array
     @returns void
     @author Muhannad Al-Ghamdi
+    @data 15/04/2022
 */
 void *run_monitor(void *args){
     ut = 0;
@@ -64,6 +67,14 @@ void *run_monitor(void *args){
     }
 }
 
+/** 
+    terimantes the monitor thread
+    @param  pthread_t fot the monitor thread 
+    @return void
+    @author Muhannad Al-Ghamdi
+    @precondition N/A 
+    @data 25/04/2022
+*/
 void term_monitor(pthread_t tid){
     calc_utilization(&ut_previous, &ut);
     updateStats(oc, nc, pk, rf, nm, sqw, spt, ut);

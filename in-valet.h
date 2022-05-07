@@ -18,6 +18,12 @@ int init_in_valets(int number_valets);
 */
 void *run_in_valet(void *args);
 
+/**
+    termination of the in-valets threads
+    @returns void
+    @author Muhannad Al-Ghamdi
+    @date 25/04/2022
+*/
 void term_invalets();
 
 #endif

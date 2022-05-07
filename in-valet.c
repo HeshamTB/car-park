@@ -13,6 +13,12 @@
 
 
 
+
+
+int num_in_valets = 0;
+pthread_t *tid = NULL;
+atomic_int turn_in;
+
 /**
     Entry point for in-valet thread
     @param Pointer to thread arguments array
@@ -20,11 +26,6 @@
     @author Muhannad Al-Ghamdi
     @date 18/04/2022
 */
-
-int num_in_valets = 0;
-pthread_t *tid = NULL;
-atomic_int turn_in;
-
 void *run_in_valet(void *args){
     Car*  newCar;
     time_t delta;
@@ -125,6 +126,13 @@ int init_in_valets(int number_valets)
     return 0;
 }
 
+
+/**
+    termination of the in-valets threads
+    @returns void
+    @author Muhannad Al-Ghamdi
+    @date 25/04/2022
+*/
 void term_invalets(){
      for (int i=0; i<num_in_valets; i++){
           pthread_cancel(tid[i]);
