@@ -1,0 +1,59 @@
+
+Finished parts:
+	Queue
+	Split code into files
+	Main loop car generation
+	Monitor 
+	Start GUI (with queue working)
+	Parse cli args correctly
+	Makefile updated
+	Out Valets (inital code as per design)
+
+Working on:
+	Proper signal handling
+		Handle signals with graceful thread termination and print final report
+		to stdout
+	
+	out-valet
+		Look for car due to exit
+		Use lock properly
+
+	Test for deadlocks
+
+Problems faced:
+	- multiple includes 
+		Solved by using include guards
+		#ifndef HEADFILENAME_H
+		#define HEADFILENAME_H
+
+		((Header content))
+
+		#endif
+
+	- Implemented CarInit when it was already defined in CarPark.o
+		ld pointed to a text region in CarPark.o
+
+Not started: 
+
+	- Claculating statistics correctly
+	- Proper thread signalling
+		Some regions need to stop listening for cancel requests
+		similar to disabling interrupts. The critical section needs
+		to finish for a thread to be cancled. The cancel caller
+		should get a return from thread_cancel if the thread is
+		busy. We should retry to cancel again.
+		The order of cleanup is critical to be able to exit safely.
+
+
+To improve:
+	- If we implement Priority Queue, out-valets can work faster.
+	- Another thread can check all cars and dispatch like a schedualer
+	- Use spinlocks for small and fast critical sections
+	- Use sleep timers
+		- Loop and find most soon ltm+ptm and sleep _all_ out-vales until that
+		- Make a sleeping thread for each parked car, notes its slot
+			Maybe a shared var
+	- Make in-valets kick off threads with timers, that then post in a counting semaphore
+	for out-valets. Idea is to reduce polling by the out-valets (busy checking due cars)
+	A struct holds a mutex, car_park_index, (car or time to sleep), sem_t shared with out-valets.
+

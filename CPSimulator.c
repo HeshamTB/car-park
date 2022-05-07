@@ -88,7 +88,7 @@ void init(){
     Parse runtime arguments, start GUI and threads
     @author Muhannad Al-Ghamdi
     @author Hesham T. Banafa
-    @date Apr 15th, 2022
+    @date Apr 21st, 2022
 */
 int main(int argc, char *argv[]) 
 {   
@@ -118,8 +118,6 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
     /* if some of the optional args are not set to a non-zero, init with default */
  
-
-
 
     init();
     
@@ -211,9 +209,9 @@ void usage()
 
 
 /**
-    cleaning up and printing the stats
+    Performe final operations before exit. Release all resources
     @author Muhannad Al-Ghamdi
-    @date Apr 25th, 2022
+    @date 29th April, 2022
 */
 void clean_up(){
     time_t t = time(NULL);
@@ -256,18 +254,18 @@ void clean_up(){
     printf("Average parking time:     %.3f\n",spt);
     printf("Percentage of park utilization:     %.3f%%\n",ut);
 
+
+
     finish();
 
-
-
-    
 }
 
 
 /**
-    Signal Handler for interuption
+    SIGINT handler
+    @author Muhannad Al-Ghamdi
     @author Hesham T. Banafa
-    @date Apr 16th, 2022
+    @date 26th April, 2022
 */
 void sigint_handler()
 {
@@ -278,9 +276,10 @@ void sigint_handler()
 }
 
 /**
-    Signal Handler for termination
+    SIGTERM handler
+    @author Muhannad Al-Ghamdi
     @author Hesham T. Banafa
-    @date Apr 16th, 2022
+    @date 26th April, 2022
 */
 void sigterm_handler()
 {

@@ -1,5 +1,4 @@
 a.out
 *.o
-CarPark.o
 cp
 tests/run_tests
