@@ -7,13 +7,19 @@ Difficulties:
 
 Realized from desgin:
     - No busy waiting for syncornization events
-    - 
+    - synchronized access to the waiting queue
+    - synchronized access to the parking
+    - The stats varibles were shared and synchronized between the muliple threads
+
 
 Failed to realize:
     - out-valets should be sleeping until cars are due.
         As mentioned in updated design, this method is not
         sound logically.
-    - 
+    - the intiall deaign failed to avoid the deadlock due to the wait for in-valet 
+        to signal new parked cars but this is will cause a deadlock when the park is full. 
+        This was solved in the updated design by changing the locking mechanism.
+
 
 Build:
     "make" or "make all"
