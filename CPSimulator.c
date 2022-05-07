@@ -88,7 +88,7 @@ void init(){
     Parse runtime arguments, start GUI and threads
     @author Muhannad Al-Ghamdi
     @author Hesham T. Banafa
-    @date Apr 15th, 2022
+    @date Apr 21st, 2022
 */
 int main(int argc, char *argv[]) 
 {   
@@ -118,8 +118,6 @@ Muhannad Al-Ghamdi - Hesham T. Banafa\n");
     printf("%d %d %d %d %.2f\n", psize, in_valets, out_valets, qsize, exp_cars);
     /* if some of the optional args are not set to a non-zero, init with default */
  
-
-
 
     init();
     
@@ -210,7 +208,11 @@ void usage()
 }
 
 
-
+/**
+    Performe final operations before exit. Release all resources
+    @author Muhannad Al-Ghamdi
+    @date 29th April, 2022
+*/
 void clean_up(){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
@@ -252,20 +254,16 @@ void clean_up(){
     printf("Average parking time:     %.3f\n",spt);
     printf("Percentage of park utilization:     %.3f%%\n",ut);
     
-    /*TODO:
-     * [] check for memory leaks
-     * */
-
     finish();
 
-
-
-    
 }
 
-
-
-// TODO: Implement handlers to clean up and print final report to terminal (stdout)
+/**
+    SIGINT handler
+    @author Muhannad Al-Ghamdi
+    @author Hesham T. Banafa
+    @date 26th April, 2022
+*/
 void sigint_handler()
 {
     printf("Recieved SIGINT...\n");
@@ -274,6 +272,12 @@ void sigint_handler()
     exit(0);
 }
 
+/**
+    SIGTERM handler
+    @author Muhannad Al-Ghamdi
+    @author Hesham T. Banafa
+    @date 26th April, 2022
+*/
 void sigterm_handler()
 {
     printf("Recieved SIGTERM...\n");

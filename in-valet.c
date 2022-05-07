@@ -18,7 +18,7 @@
     @param Pointer to thread arguments array
     @returns void
     @author Muhannad Al-Ghamdi
-    @date 18/04/2022
+    @date 27/04/2022
 */
 
 int num_in_valets = 0;
@@ -111,7 +111,7 @@ void *run_in_valet(void *args){
     @param Number of valets to start
     @returns 0 if successful, 1 if failed
     @author Muhannad Al-Ghamdi 
-    @date 18/04/2022
+    @date 27/04/2022
 */
 int init_in_valets(int number_valets) 
 {

@@ -26,6 +26,7 @@ pthread_t *tid_out = NULL;
     @param Number of valets to start
     @returns 0 if successful, 1 if failed
     @author Hesham T. Banafa 
+    @date Apr 27th, 2022
 */
 int init_out_valets(int number_valets)
 {
@@ -49,6 +50,7 @@ int init_out_valets(int number_valets)
     @param Pointer to thread arguments array
     @returns void
     @author Hesham T. Banafa
+    @date Apr 29th, 2022
 */
 void *run_out_valets(void *args)
 {
